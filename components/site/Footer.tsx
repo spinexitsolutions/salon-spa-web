@@ -50,7 +50,7 @@ export default function Footer() {
             </p>
             <p className="mt-4 max-w-sm text-cream/60">Monthly rituals, early access to offers and journal notes. No noise — promise.</p>
             <form
-              className="mt-6 flex max-w-md items-center gap-2 rounded-full border border-white/15 p-1.5 pl-5"
+              className="mt-6 flex max-w-md items-center gap-2 rounded-[var(--radius)] border border-white/15 p-1.5 pl-5"
               onSubmit={(e) => {
                 e.preventDefault();
                 if (!email) return;
@@ -67,7 +67,7 @@ export default function Footer() {
                 placeholder={done ? "You're on the list ✓" : "Your email"}
                 className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-cream/40"
               />
-              <button className="flex h-10 items-center gap-1 rounded-full bg-cream px-4 text-sm font-medium text-night">
+              <button className="flex h-10 items-center gap-1 rounded-[var(--radius)] bg-cream px-4 text-sm font-medium text-night">
                 Join <ArrowUpRight size={14} />
               </button>
             </form>
@@ -119,7 +119,7 @@ export default function Footer() {
               <div className="mt-4 flex gap-2">
                 {(["instagram", "facebook", "youtube"] as const).map((n) =>
                   s[n] ? (
-                    <a key={n} href={s[n]} target="_blank" rel="noreferrer" aria-label={n} className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 transition-colors hover:bg-cream hover:text-night">
+                    <a key={n} href={s[n]} target="_blank" rel="noreferrer" aria-label={n} className="flex h-10 w-10 items-center justify-center rounded-[var(--radius)] border border-white/15 transition-colors hover:bg-cream hover:text-night">
                       <SocialIcon name={n} />
                     </a>
                   ) : null
@@ -131,7 +131,7 @@ export default function Footer() {
       </div>
 
       <div className="relative overflow-hidden">
-        <motion.div style={{ y }} className="display select-none whitespace-nowrap text-center text-[27vw] leading-[0.8] text-cream/[0.95]">
+        <motion.div style={{ y, paddingTop: "0.18em" }} className="display select-none whitespace-nowrap text-center text-[27vw] leading-[0.8] text-cream/[0.95]">
           {s.brandName}
         </motion.div>
       </div>

@@ -1,6 +1,6 @@
 # Solène — Salon & Spa Atelier
 
-A premium, mobile-first salon & spa website (sans-serif type system: Bricolage Grotesque + Instrument Sans, vermilion accent) with a built-in **Studio OS** admin panel (CRM + CMS). Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, Framer Motion and Lenis.
+A mobile-first salon & spa website with an editorial "beauty magazine" design language (Archivo variable: ultra-condensed headlines + ultra-wide labels; plum, blush & Klein-blue palette) with a built-in **Studio OS** admin panel (CRM + CMS). Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, Framer Motion and Lenis.
 
 ## Quick start
 
@@ -16,17 +16,17 @@ Admin panel: **`/admin`** (demo login `admin@solene.studio` / `solene123` — th
 | Feature | Notes |
 | --- | --- |
 | Intro animation | 3 styles (Bloom / Frame / Minimal), wordmark, caption, images and duration all set from admin. `/?intro=1` forces replay. |
-| Dynamic-island navbar | Floating pill with scroll-progress ring, live "Open · till 9 PM" status, compacts on scroll, turns dark over dark sections, morphs into a full menu with hover image previews. Announcements drop out of it like a notification. |
-| Kinetic hero | Rotating word inside an accent pill ("Your best **skin** starts here"), a swipeable deck of service-category cards, a spinning Book badge and a quick-book bar (service + day → booking). |
+| Navigation | Desktop: vertical side rail with live clock, open/closed status, scroll gauge and a "Book now" tab. Mobile: app-style bottom tab bar with a raised Book button. The menu is a full-screen magazine "Index" (table of contents with page numbers and dotted leaders). |
+| Masthead hero | Brand name auto-fitted to the full width that condenses into place, an issue/date line, a section strap, a live "Today's openings" ticket built from opening hours and existing bookings, a figure image with a blinds reveal, and a priced service index. |
 | Velocity marquee | Speed and skew react to how fast you scroll. |
 | Philosophy | Words light up as you scroll, and image pills open up inside the sentence. |
-| Service menu | Category pills with a sliding indicator; a cursor-following image preview on desktop; cards on mobile. |
-| Signature rituals | Pinned horizontal-scroll gallery of featured services. |
+| Price list | Printed-menu style rows with dotted leaders; each row unfolds inline with image, description and Reserve. |
+| Signature rituals | Sticky scrollytelling: the image and big index number change as each ritual takes focus; titles condense when active. |
 | Team, gallery (filter + shared-element lightbox), memberships, testimonials carousel, offers with copyable codes, journal, FAQ, CTA with callback request | |
 | Online booking | Service → artist → date/slot → details. Checks staff clashes, applies offer codes, saves to the CRM, gives a booking reference, an .ics calendar file and a WhatsApp share. |
 | Gift cards | Live 3D-tilt card preview, 4 designs; orders appear in the CRM. |
 | Contact | Enquiry form → leads, hours with today highlighted, Google Map. |
-| Extras | Lenis smooth scroll, custom cursor, film grain, WhatsApp button, newsletter, reduced-motion support. |
+| Motion | Headings condense from wide to ultra-condensed as they scroll in, images open with a blinds shutter, blocks clip-wipe in, and the page background shifts between milk and blush per section. Smooth scroll, WhatsApp button, newsletter, reduced-motion support. |
 
 ## Studio OS (admin)
 
@@ -39,7 +39,7 @@ Admin panel: **`/admin`** (demo login `admin@solene.studio` / `solene123` — th
 - **CMS** — services, categories, team, gallery, testimonials, memberships, offers, journal, FAQs, numbers. Drag to reorder, publish/hide, duplicate, upload images or paste URLs.
 - **Homepage builder** — drag to reorder sections, show/hide any section, edit hero text and image, announcement bar. Includes a live mobile/desktop preview.
 - **Intro animation** — style, text, timing, images, once-per-session, live preview.
-- **Brand & theme** — name, 5 palette presets (Vermilion, Electric Lilac, Cherry, Cobalt, Hot Pink) plus custom colours, 3 sans display typefaces (Bricolage, Syne, Unbounded), corner radius, and toggles for smooth scroll, cursor and grain.
+- **Brand & theme** — name, 5 palette presets (Plum & Klein, Oxblood, Forest, Lilac Night, Tangerine) plus custom colours, 3 sans display typefaces (Archivo Condensed, Bricolage, Syne), corner radius, and toggles for smooth scroll, cursor and grain.
 - **Business settings** — contact, WhatsApp, opening hours (these drive the booking slots and the live open/closed status), socials, SEO, admin credentials, and JSON export/import/reset.
 
 ## Architecture

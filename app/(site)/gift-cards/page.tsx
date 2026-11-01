@@ -66,7 +66,7 @@ export default function GiftCardsPage() {
               my.set(0);
             }}
             style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
-            className={cn("relative aspect-[1.6/1] w-full overflow-hidden rounded-[28px] p-6 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.45)] md:p-8", DESIGNS[design].cls)}
+            className={cn("relative aspect-[1.6/1] w-full overflow-hidden rounded-[var(--radius)] p-6 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.45)] md:p-8", DESIGNS[design].cls)}
           >
             <motion.div className="pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay" style={{ background: "linear-gradient(105deg,transparent 30%,rgba(255,255,255,.8) 50%,transparent 70%)", backgroundSize: "250% 100%", backgroundPositionX: shineX }} />
             <div className="relative flex h-full flex-col justify-between" style={{ transform: "translateZ(40px)" }}>
@@ -86,8 +86,8 @@ export default function GiftCardsPage() {
           </motion.div>
           <div className="mt-5 flex gap-2">
             {(Object.keys(DESIGNS) as DesignKey[]).map((d) => (
-              <button key={d} onClick={() => setDesign(d)} className={cn("flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm", design === d ? "border-ink" : "hairline")}>
-                <span className={cn("h-4 w-4 rounded-full", DESIGNS[d].cls)} /> {DESIGNS[d].label}
+              <button key={d} onClick={() => setDesign(d)} className={cn("flex items-center gap-2 rounded-[var(--radius)] border px-3 py-1.5 text-sm", design === d ? "border-ink" : "hairline")}>
+                <span className={cn("h-4 w-4 rounded-[var(--radius)]", DESIGNS[d].cls)} /> {DESIGNS[d].label}
               </button>
             ))}
           </div>
@@ -97,12 +97,12 @@ export default function GiftCardsPage() {
         <div>
           {done ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ ease: EASE, duration: 0.8 }} className="rounded-[var(--radius)] bg-night p-8 text-cream">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent">
+              <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius)] bg-accent">
                 <Check />
               </span>
               <h2 className="display mt-6 text-5xl">Gift sent ✨</h2>
               <p className="mt-2 text-cream/60">Share this code with {f.to || "your recipient"}. Our team will call to complete payment.</p>
-              <div className="mt-6 rounded-2xl border border-dashed border-white/25 p-5 text-center font-mono text-2xl tracking-widest">{done}</div>
+              <div className="mt-6 rounded-[var(--radius)] border border-dashed border-white/25 p-5 text-center font-mono text-2xl tracking-widest">{done}</div>
               <button
                 onClick={() => {
                   setDone(null);
@@ -125,7 +125,7 @@ export default function GiftCardsPage() {
                 <div className="eyebrow mb-3 text-soft">Amount</div>
                 <div className="grid grid-cols-3 gap-2">
                   {[2500, 5000, 7500, 10000, 15000, 25000].map((a) => (
-                    <button type="button" key={a} onClick={() => setAmount(a)} className={cn("rounded-2xl border py-4 text-lg transition-all", amount === a ? "border-ink bg-ink text-bg" : "hairline hover:border-ink/40")}>
+                    <button type="button" key={a} onClick={() => setAmount(a)} className={cn("rounded-[var(--radius)] border py-4 text-lg transition-all", amount === a ? "border-ink bg-ink text-bg" : "hairline hover:border-ink/40")}>
                       {formatPrice(a, settings.currency)}
                     </button>
                   ))}
@@ -140,7 +140,7 @@ export default function GiftCardsPage() {
                   <Field label="Personal message" textarea value={f.message} onChange={(v) => setF({ ...f, message: v })} />
                 </div>
               </div>
-              <button disabled={f.phone.length < 8} className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-accent text-[15px] font-medium text-white disabled:opacity-40">
+              <button disabled={f.phone.length < 8} className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius)] bg-accent text-[15px] font-medium text-white disabled:opacity-40">
                 <Gift size={17} /> Send gift card · {formatPrice(amount, settings.currency)}
               </button>
             </form>

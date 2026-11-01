@@ -1,22 +1,22 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import { BookOpen, CalendarPlus, Home, LayoutGrid, Scissors, X } from "lucide-react";
 import { useStore, useUI } from "@/lib/store";
-import { cn, openStatus } from "@/lib/utils";
+import { cn, formatTime, openStatus, weekdayIndex } from "@/lib/utils";
 import { EASE } from "@/components/motion";
 
 const LINKS = [
-  { href: "/", label: "Home", imgKey: 0 },
-  { href: "/services", label: "Services", imgKey: 1 },
-  { href: "/#rituals", label: "Rituals", imgKey: 2 },
-  { href: "/book", label: "Book", imgKey: 3 },
-  { href: "/gift-cards", label: "Gift cards", imgKey: 4 },
-  { href: "/journal", label: "Journal", imgKey: 5 },
-  { href: "/contact", label: "Contact", imgKey: 6 },
+  { href: "/", label: "Home", page: "01" },
+  { href: "/services", label: "Services", page: "02" },
+  { href: "/#rituals", label: "Rituals", page: "03" },
+  { href: "/book", label: "Book", page: "04" },
+  { href: "/gift-cards", label: "Gift cards", page: "05" },
+  { href: "/journal", label: "Journal", page: "06" },
+  { href: "/contact", label: "Contact", page: "07" },
 ];
 
 declare global {
@@ -24,6 +24,22 @@ declare global {
     __lenis?: { stop: () => void; start: () => void; scrollTo: (t: number | string | HTMLElement, o?: object) => void };
   }
 }
+
+function useClock() {
+  const [t, setT] = useState("");
+  useEffect(() => {
+    const f = () => {
+      const d = new Date();
+      setT(`${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`);
+    };
+    f();
+    const i = setInterval(f, 15000);
+    return () => clearInterval(i);
+  }, []);
+  return t;
+}
+
+const isActive = (pathname: string, href: string) => (href === "/" ? pathname === "/" : !href.includes("#") && pathname.startsWith(href));
 
 export default function Navbar() {
   const settings = useStore((s) => s.settings);
@@ -33,14 +49,11 @@ export default function Navbar() {
   const setOpen = useUI((s) => s.setMenuOpen);
   const introDone = useUI((s) => s.introDone);
   const pathname = usePathname();
-  const [dark, setDark] = useState(false);
-  const [compact, setCompact] = useState(false);
-  const [atTop, setAtTop] = useState(true);
-  const [hover, setHover] = useState(0);
-  const [dismissed, setDismissed] = useState(false);
+  const clock = useClock();
   const [status, setStatus] = useState({ open: true, label: "" });
-
-  const { scrollY, scrollYProgress } = useScroll();
+  const [dismissed, setDismissed] = useState(false);
+  const [hover, setHover] = useState(0);
+  const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
   useEffect(() => {
@@ -48,18 +61,7 @@ export default function Navbar() {
     const t = setInterval(() => setStatus(openStatus(settings.hours)), 60000);
     return () => clearInterval(t);
   }, [settings.hours]);
-
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setAtTop(y < 40);
-    setCompact(y > 160 && y > prev);
-    // detect dark sections under the island
-    const els = document.elementsFromPoint(window.innerWidth / 2, 36);
-    setDark(els.some((el) => (el as HTMLElement).closest?.("[data-nav='dark']")));
-  });
-
   useEffect(() => setOpen(false), [pathname, setOpen]);
-
   useEffect(() => {
     if (open) window.__lenis?.stop();
     else window.__lenis?.start();
@@ -69,251 +71,208 @@ export default function Navbar() {
   }, [open, setOpen]);
 
   const images = useMemo(() => gallery.filter((g) => g.published).map((g) => g.image), [gallery]);
-  const tone = dark && !open ? "dark" : "light";
-  const mark = settings.brandName.charAt(0);
+  const [today, setToday] = useState<(typeof settings.hours)[number] | undefined>();
+  useEffect(() => setToday(settings.hours[weekdayIndex(new Date())]), [settings.hours]);
 
   return (
     <>
-      {/* scrim */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[98] bg-night/40 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      <motion.header
-        className="pointer-events-none fixed inset-x-0 top-0 z-[99] flex flex-col items-center px-3 pt-[max(12px,env(safe-area-inset-top))] md:pt-4"
-        initial={{ y: -120, opacity: 0 }}
-        animate={introDone ? { y: 0, opacity: 1 } : { y: -120, opacity: 0 }}
-        transition={{ duration: 1.2, ease: EASE, delay: 0.25 }}
+      {/* ───────── desktop: vertical rail ───────── */}
+      <motion.aside
+        className="fixed inset-y-0 left-0 z-[99] hidden w-[76px] flex-col items-center justify-between border-r border-ink/15 bg-bg py-5 md:flex"
+        initial={{ x: -80 }}
+        animate={introDone ? { x: 0 } : { x: -80 }}
+        transition={{ duration: 0.9, ease: EASE }}
       >
-        <motion.nav
-          layout
-          transition={{ type: "spring", stiffness: 300, damping: 32, mass: 0.9 }}
-          style={{ borderRadius: open ? 30 : 999 }}
-          className={cn(
-            "pointer-events-auto relative overflow-hidden border shadow-[0_10px_40px_-12px_rgba(0,0,0,0.25)]",
-            open ? "border-black/[0.06] bg-bg text-ink" : tone === "dark" ? "glass-dark border-white/10 text-cream" : "glass border-black/[0.06] text-ink",
-            open ? "w-full max-w-[1040px]" : "w-auto"
-          )}
-          aria-label="Main"
-        >
-          <AnimatePresence mode="popLayout" initial={false}>
-            {!open ? (
-              <motion.div
-                key="pill"
-                layout="position"
-                initial={{ opacity: 0, filter: "blur(6px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, filter: "blur(6px)" }}
-                transition={{ duration: 0.35 }}
-                className="flex h-[54px] items-center gap-1 pl-[7px] pr-[7px]"
-              >
-                <Link href="/" className="flex items-center gap-2.5 pr-2" aria-label="Home">
-                  <Mark letter={mark} progress={progress} tone={tone} />
-                  <AnimatePresence initial={false}>
-                    {!compact && (
-                      <motion.span
-                        initial={{ width: 0, opacity: 0 }}
-                        animate={{ width: "auto", opacity: 1 }}
-                        exit={{ width: 0, opacity: 0 }}
-                        transition={{ duration: 0.45, ease: EASE }}
-                        className="overflow-hidden whitespace-nowrap font-serif text-[22px] leading-none"
-                      >
-                        {settings.brandName}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
+        <Link href="/" aria-label="Home" className="flex flex-col items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center bg-ink font-serif text-[22px] text-bg">{settings.brandName.charAt(0)}</span>
+        </Link>
 
-                <span className={cn("mx-1 hidden h-5 w-px md:block", tone === "dark" ? "bg-white/15" : "bg-black/10")} />
+        <nav className="flex flex-col items-center gap-6" aria-label="Main">
+          {LINKS.slice(1, 6).map((l) => {
+            const active = isActive(pathname, l.href);
+            return (
+              <Link key={l.href} href={l.href} className={cn("group relative flex items-center", active ? "text-accent" : "text-ink/60 hover:text-ink")}>
+                <span className="wide rotate-180 py-1 text-[10px] [writing-mode:vertical-rl]">{l.label}</span>
+                {active && <motion.span layoutId="rail-dot" className="absolute -right-[19px] h-full w-[3px] bg-accent" />}
+              </Link>
+            );
+          })}
+        </nav>
 
-                <div className="hidden items-center gap-2 px-2 text-[12.5px] md:flex">
-                  <span className="relative flex h-2 w-2">
-                    {status.open && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />}
-                    <span className={cn("relative inline-flex h-2 w-2 rounded-full", status.open ? "bg-emerald-500" : "bg-rose-400")} />
-                  </span>
-                  <span className="opacity-70">{status.label}</span>
-                </div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative h-16 w-[3px] overflow-hidden bg-ink/10" aria-hidden>
+            <motion.div className="absolute inset-0 origin-top bg-accent" style={{ scaleY: progress }} />
+          </div>
+          <div className="text-center">
+            <div className="font-serif text-[20px] leading-none tabular-nums">{clock || "--:--"}</div>
+            <div className="mt-1.5 flex items-center justify-center gap-1">
+              <span className={cn("h-1.5 w-1.5", status.open ? "bg-emerald-500" : "bg-rose-500")} />
+              <span className="wide text-[8.5px] text-ink/60">{status.open ? "Open" : "Closed"}</span>
+            </div>
+          </div>
+          <button onClick={() => setOpen(true)} aria-label="Open index" className="flex h-11 w-11 items-center justify-center border border-ink/20 transition-colors hover:bg-ink hover:text-bg">
+            <LayoutGrid size={17} />
+          </button>
+          <Link href="/book" className="flex h-24 w-11 items-center justify-center bg-accent text-white transition-[height] duration-500 hover:h-28">
+            <span className="wide rotate-180 text-[10px] [writing-mode:vertical-rl]">Book now</span>
+          </Link>
+        </div>
+      </motion.aside>
 
-                <button
-                  onClick={() => setOpen(true)}
-                  className={cn(
-                    "group flex h-10 items-center gap-2.5 rounded-full px-4 text-[13px] font-medium transition-colors",
-                    tone === "dark" ? "hover:bg-white/10" : "hover:bg-black/5"
-                  )}
-                  aria-expanded={open}
-                >
-                  <span className="flex w-4 flex-col gap-[4px]">
-                    <span className="h-[1.5px] w-full rounded bg-current transition-transform duration-500 group-hover:translate-x-0.5" />
-                    <span className="h-[1.5px] w-2/3 rounded bg-current transition-all duration-500 group-hover:w-full" />
-                  </span>
-                  Menu
-                </button>
-                <Link
-                  href="/book"
-                  className="flex h-10 items-center gap-1.5 rounded-full bg-accent px-4 text-[13px] font-medium text-white transition-transform hover:scale-[1.03] active:scale-95"
-                >
-                  Book <ArrowUpRight size={14} />
-                </Link>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="panel"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: { delay: 0.12, duration: 0.4 } }}
-                exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                className="flex max-h-[calc(100dvh-24px)] flex-col overflow-y-auto p-4 md:p-6"
-                data-lenis-prevent
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Mark letter={mark} progress={progress} tone="light" />
-                    <div>
-                      <div className="font-serif text-2xl leading-none">{settings.brandName}</div>
-                      <div className="eyebrow mt-1 text-soft">{settings.brandSuffix}</div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setOpen(false)}
-                    className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-bg transition-transform hover:rotate-90"
-                    aria-label="Close menu"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-
-                <div className="mt-6 grid gap-6 md:mt-8 md:grid-cols-[1.25fr_1fr] md:gap-10">
-                  <ul className="flex flex-col">
-                    {LINKS.map((l, i) => (
-                      <motion.li
-                        key={l.href}
-                        initial={{ opacity: 0, y: 24 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.15 + i * 0.05, duration: 0.7, ease: EASE }}
-                        onMouseEnter={() => setHover(i)}
-                        className="border-b hairline last:border-b-0"
-                      >
-                        <Link
-                          href={l.href}
-                          onClick={() => setOpen(false)}
-                          className="group flex items-baseline gap-4 py-2.5 md:py-3"
-                        >
-                          <span className="eyebrow w-6 text-accent">{String(i + 1).padStart(2, "0")}</span>
-                          <span
-                            className={cn(
-                              "display text-[44px] transition-all duration-500 md:text-[58px]",
-                              (pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href))) && "text-accent",
-                              "group-hover:translate-x-2"
-                            )}
-                          >
-                            {l.label}
-                          </span>
-                          <ArrowUpRight className="ml-auto self-center opacity-0 transition-all duration-500 group-hover:opacity-100" size={22} />
-                        </Link>
-                      </motion.li>
-                    ))}
-                  </ul>
-
-                  <div className="relative hidden overflow-hidden rounded-[22px] bg-soft md:block">
-                    <AnimatePresence mode="popLayout">
-                      <motion.img
-                        key={hover}
-                        src={images[LINKS[hover].imgKey % Math.max(images.length, 1)]}
-                        alt=""
-                        className="absolute inset-0 h-full w-full object-cover"
-                        initial={{ opacity: 0, scale: 1.12, clipPath: "inset(100% 0 0 0)" }}
-                        animate={{ opacity: 1, scale: 1, clipPath: "inset(0% 0 0 0)" }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: EASE }}
-                      />
-                    </AnimatePresence>
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-5 text-white">
-                      <div className="eyebrow opacity-70">Now viewing</div>
-                      <div className="display text-4xl">{LINKS[hover].label}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 grid gap-4 border-t hairline pt-5 text-sm md:grid-cols-3">
-                  <div>
-                    <div className="eyebrow text-soft">Visit</div>
-                    <div className="mt-1">{settings.address}</div>
-                    <div className="text-soft">{settings.city}</div>
-                  </div>
-                  <div>
-                    <div className="eyebrow text-soft">Talk</div>
-                    <a href={`tel:${settings.phone}`} className="link-underline mt-1 block">{settings.phone}</a>
-                    <a href={`mailto:${settings.email}`} className="link-underline text-soft">{settings.email}</a>
-                  </div>
-                  <div className="flex items-end md:justify-end">
-                    <Link
-                      href="/book"
-                      onClick={() => setOpen(false)}
-                      className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-6 text-bg md:w-auto"
-                    >
-                      Reserve your ritual <ArrowUpRight size={16} />
+      {/* ───────── top strip (in document flow) ───────── */}
+      <div className="md:pl-[76px]">
+        <AnimatePresence initial={false}>
+          {announcement.enabled && !dismissed && (
+            <motion.div exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-accent text-white">
+              <div className="wide flex h-9 items-center justify-between gap-3 px-4 md:px-8">
+                <span className="truncate">✦ {announcement.text}</span>
+                <span className="flex shrink-0 items-center gap-3">
+                  {announcement.link && (
+                    <Link href={announcement.link} className="underline underline-offset-4">
+                      {announcement.linkLabel || "View"}
                     </Link>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.nav>
-
-        {/* Dynamic-island style notification */}
-        <AnimatePresence>
-          {announcement.enabled && !dismissed && atTop && !open && introDone && (
-            <motion.div
-              initial={{ opacity: 0, y: -16, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -12, scale: 0.92 }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.6 }}
-              className="pointer-events-auto mt-2 flex max-w-[92vw] items-center gap-2 rounded-full bg-ink py-1.5 pl-3 pr-1.5 text-[12px] text-bg shadow-lg"
-            >
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-              <span className="truncate">{announcement.text}</span>
-              {announcement.link && (
-                <Link href={announcement.link} className="shrink-0 rounded-full bg-bg/15 px-2.5 py-1 font-medium hover:bg-bg/25">
-                  {announcement.linkLabel || "View"}
-                </Link>
-              )}
-              <button onClick={() => setDismissed(true)} className="shrink-0 rounded-full p-1 opacity-60 hover:opacity-100" aria-label="Dismiss">
-                <X size={12} />
-              </button>
+                  )}
+                  <button onClick={() => setDismissed(true)} aria-label="Dismiss" className="opacity-70 hover:opacity-100">
+                    <X size={13} />
+                  </button>
+                </span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.header>
-    </>
-  );
-}
+        <div className="flex items-center justify-between border-b border-ink/15 px-4 py-3 md:hidden">
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center bg-ink font-serif text-[18px] text-bg">{settings.brandName.charAt(0)}</span>
+            <span className="font-serif text-[22px] leading-none">{settings.brandName}</span>
+          </Link>
+          <div className="text-right">
+            <div className="font-serif text-[18px] leading-none tabular-nums">{clock}</div>
+            <div className="wide mt-1 flex items-center justify-end gap-1 text-[8.5px] text-ink/60">
+              <span className={cn("h-1.5 w-1.5", status.open ? "bg-emerald-500" : "bg-rose-500")} />
+              {status.label}
+            </div>
+          </div>
+        </div>
+      </div>
 
-function Mark({ letter, progress, tone }: { letter: string; progress: ReturnType<typeof useSpring>; tone: string }) {
-  return (
-    <span className="relative flex h-10 w-10 items-center justify-center">
-      <svg viewBox="0 0 40 40" className="absolute inset-0 -rotate-90">
-        <circle cx="20" cy="20" r="18.5" fill="none" strokeWidth="1.5" className={tone === "dark" ? "stroke-white/15" : "stroke-black/10"} />
-        <motion.circle
-          cx="20"
-          cy="20"
-          r="18.5"
-          fill="none"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          className="stroke-accent"
-          style={{ pathLength: progress }}
-        />
-      </svg>
-      <span className={cn("flex h-[30px] w-[30px] items-center justify-center rounded-full font-serif text-[19px] leading-none", tone === "dark" ? "bg-cream text-night" : "bg-ink text-bg")}>
-        {letter}
-      </span>
-    </span>
+      {/* ───────── mobile: bottom tab bar ───────── */}
+      <motion.nav
+        className="fixed inset-x-0 bottom-0 z-[99] border-t border-ink/15 bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        initial={{ y: 100 }}
+        animate={introDone ? { y: 0 } : { y: 100 }}
+        transition={{ duration: 0.8, ease: EASE }}
+        aria-label="Tabs"
+      >
+        <div className="grid h-[62px] grid-cols-5">
+          {[
+            { href: "/", label: "Home", icon: Home },
+            { href: "/services", label: "Menu", icon: Scissors },
+            { href: "/book", label: "Book", icon: CalendarPlus, primary: true },
+            { href: "/journal", label: "Journal", icon: BookOpen },
+          ].map((t) =>
+            t.primary ? (
+              <Link key={t.href} href={t.href} className="relative flex items-center justify-center">
+                <span className="-mt-7 flex h-[58px] w-[58px] flex-col items-center justify-center gap-0.5 bg-accent text-white shadow-[0_10px_24px_-10px_var(--c-accent)]">
+                  <t.icon size={19} />
+                  <span className="wide text-[8px]">{t.label}</span>
+                </span>
+              </Link>
+            ) : (
+              <Link key={t.href} href={t.href} className={cn("flex flex-col items-center justify-center gap-1", isActive(pathname, t.href) ? "text-accent" : "text-ink/55")}>
+                <t.icon size={19} strokeWidth={1.8} />
+                <span className="wide text-[8px]">{t.label}</span>
+              </Link>
+            )
+          )}
+          <button onClick={() => setOpen(true)} className="flex flex-col items-center justify-center gap-1 text-ink/55">
+            <LayoutGrid size={19} strokeWidth={1.8} />
+            <span className="wide text-[8px]">Index</span>
+          </button>
+        </div>
+      </motion.nav>
+
+      {/* ───────── Index (table of contents) ───────── */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 z-[150] overflow-y-auto bg-night text-cream"
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            exit={{ clipPath: "inset(0 0 0 100%)" }}
+            transition={{ duration: 0.8, ease: EASE }}
+            data-lenis-prevent
+          >
+            <div className="mx-auto flex min-h-full max-w-[1400px] flex-col px-4 pb-24 pt-4 md:px-10 md:pb-10 md:pl-[116px]">
+              <div className="wide flex items-center justify-between border-b border-cream/20 pb-3 text-cream/60">
+                <span>{settings.brandName} — Index</span>
+                <span className="hidden md:block">{today ? (today.closed ? "Closed today" : `Today ${formatTime(today.open)} – ${formatTime(today.close)}`) : ""}</span>
+                <button onClick={() => setOpen(false)} className="flex h-10 w-10 items-center justify-center border border-cream/25 text-cream hover:bg-cream hover:text-night" aria-label="Close">
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="grid flex-1 gap-10 pt-6 md:grid-cols-[1.5fr_1fr] md:gap-14">
+                <ul>
+                  {LINKS.map((l, i) => (
+                    <motion.li
+                      key={l.href}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.25 + i * 0.05, duration: 0.7, ease: EASE }}
+                      onMouseEnter={() => setHover(i)}
+                    >
+                      <Link href={l.href} onClick={() => setOpen(false)} className="group flex items-baseline gap-3 border-b border-cream/10 py-1.5">
+                        <span
+                          className={cn("display text-[15vw] transition-all duration-500 md:text-[6.2vw]", isActive(pathname, l.href) ? "text-accent" : "group-hover:text-accent")}
+                          style={{ ["--wdth" as string]: hover === i ? 100 : 62 }}
+                        >
+                          {l.label}
+                        </span>
+                        <span className="leaders" />
+                        <span className="wide text-cream/50">p. {l.page}</span>
+                      </Link>
+                    </motion.li>
+                  ))}
+                </ul>
+                <div className="flex flex-col gap-6">
+                  <div className="relative hidden aspect-[4/5] overflow-hidden md:block">
+                    <AnimatePresence mode="popLayout">
+                      <motion.img
+                        key={hover}
+                        src={images[hover % Math.max(images.length, 1)]}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover"
+                        initial={{ clipPath: "inset(0 0 100% 0)" }}
+                        animate={{ clipPath: "inset(0 0 0% 0)" }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.7, ease: EASE }}
+                      />
+                    </AnimatePresence>
+                    <span className="wide absolute bottom-3 left-3 bg-night px-2 py-1 text-cream">Fig. {hover + 1}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-[14px] text-cream/80">
+                    <div>
+                      <div className="wide mb-2 text-cream/45">Visit</div>
+                      {settings.address}
+                      <br />
+                      {settings.city}
+                    </div>
+                    <div>
+                      <div className="wide mb-2 text-cream/45">Call</div>
+                      <a href={`tel:${settings.phone}`} className="block hover:text-cream">
+                        {settings.phone}
+                      </a>
+                      <a href={`mailto:${settings.email}`} className="block break-all hover:text-cream">
+                        {settings.email}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

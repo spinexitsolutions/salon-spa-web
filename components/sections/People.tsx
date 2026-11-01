@@ -26,17 +26,17 @@ export function Team() {
             <div className="group" data-cursor="Hello">
               <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius)] bg-soft">
                 <SafeImg src={m.image} alt={m.name} className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" />
-                <div className="absolute inset-x-3 bottom-3 translate-y-3 rounded-2xl bg-white/85 p-3 text-[12.5px] opacity-0 backdrop-blur-md transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="absolute inset-x-3 bottom-3 translate-y-3 rounded-[var(--radius)] bg-white/85 p-3 text-[12.5px] opacity-0 backdrop-blur-md transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                   {m.bio}
                 </div>
-                <span className="eyebrow absolute right-3 top-3 rounded-full bg-black/40 px-2.5 py-1 text-white backdrop-blur">{m.experience}</span>
+                <span className="eyebrow absolute right-3 top-3 rounded-[var(--radius)] bg-black/40 px-2.5 py-1 text-white backdrop-blur">{m.experience}</span>
               </div>
               <div className="mt-4">
                 <div className="display text-3xl">{m.name}</div>
                 <div className="text-sm text-soft">{m.role}</div>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {m.specialties.split(",").map((t) => (
-                    <span key={t} className="rounded-full bg-soft px-2.5 py-1 text-[11px]">
+                    <span key={t} className="rounded-[var(--radius)] bg-soft px-2.5 py-1 text-[11px]">
                       {t.trim()}
                     </span>
                   ))}
@@ -65,16 +65,16 @@ export function Gallery() {
   }, [active]);
 
   return (
-    <section className="bg-cream/60 py-20 md:py-32">
+    <section className="py-20 md:py-32">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <SectionLabel index="05">Gallery</SectionLabel>
+        <div className="mt-6 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <SectionLabel index="05">Gallery</SectionLabel>
             <SplitText as="h2" text="Moments from the atelier." className="display mt-6 text-[12vw] md:text-[6vw]" />
           </div>
           <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
             {cats.map((c) => (
-              <button key={c} onClick={() => setCat(c)} className={cn("shrink-0 rounded-full border px-4 py-2 text-sm transition-all", cat === c ? "border-ink bg-ink text-bg" : "hairline hover:border-ink/40")}>
+              <button key={c} onClick={() => setCat(c)} className={cn("shrink-0 rounded-[var(--radius)] border px-4 py-2 text-sm transition-all", cat === c ? "border-ink bg-ink text-bg" : "hairline hover:border-ink/40")}>
                 {c}
               </button>
             ))}
@@ -93,12 +93,12 @@ export function Gallery() {
                 transition={{ duration: 0.7, ease: EASE, delay: (i % 4) * 0.05 }}
                 onClick={() => setActive(g.id)}
                 data-cursor="View"
-                className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-[calc(var(--radius)*0.7)] md:mb-5"
+                className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-[var(--radius)] md:mb-5"
               >
                 <motion.div layoutId={`img-${g.id}`} className={cn("overflow-hidden", i % 3 === 0 ? "aspect-[3/4]" : i % 3 === 1 ? "aspect-square" : "aspect-[4/5]")}>
                   <SafeImg src={g.image} alt={g.caption} className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                 </motion.div>
-                <span className="absolute bottom-3 left-3 rounded-full bg-white/80 px-3 py-1 text-[12px] opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">{g.caption}</span>
+                <span className="absolute bottom-3 left-3 rounded-[var(--radius)] bg-white/80 px-3 py-1 text-[12px] opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">{g.caption}</span>
               </motion.button>
             ))}
           </AnimatePresence>
@@ -116,7 +116,7 @@ export function Gallery() {
               <div className="display text-3xl">{current.caption}</div>
               <div className="eyebrow mt-1 text-cream/50">{current.category}</div>
             </div>
-            <button onClick={() => setActive(null)} className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-cream text-night" aria-label="Close">
+            <button onClick={() => setActive(null)} className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-[var(--radius)] bg-cream text-night" aria-label="Close">
               <X size={18} />
             </button>
           </motion.div>
@@ -150,7 +150,7 @@ export function Packages() {
                 p.highlighted ? "bg-night text-cream" : "border hairline bg-white/40"
               )}
             >
-              {p.highlighted && <span className="eyebrow absolute right-6 top-6 rounded-full bg-accent px-3 py-1.5 text-white">Most loved</span>}
+              {p.highlighted && <span className="eyebrow absolute right-6 top-6 rounded-[var(--radius)] bg-accent px-3 py-1.5 text-white">Most loved</span>}
               <div className="display text-4xl">{p.name}</div>
               <p className={cn("mt-1 text-sm", p.highlighted ? "text-cream/60" : "text-soft")}>{p.description}</p>
               <div className="mt-8 flex items-baseline gap-1">
@@ -160,7 +160,7 @@ export function Packages() {
               <ul className="mt-8 flex-1 space-y-3 text-[14px]">
                 {p.features.split("\n").filter(Boolean).map((f) => (
                   <li key={f} className="flex gap-3">
-                    <span className={cn("mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full", p.highlighted ? "bg-accent text-white" : "bg-ink text-bg")}>
+                    <span className={cn("mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)]", p.highlighted ? "bg-accent text-white" : "bg-ink text-bg")}>
                       <Check size={11} strokeWidth={3} />
                     </span>
                     {f}
@@ -169,7 +169,7 @@ export function Packages() {
               </ul>
               <Link
                 href={`/contact?plan=${encodeURIComponent(p.name)}`}
-                className={cn("mt-10 flex h-12 items-center justify-center gap-2 rounded-full text-sm font-medium transition-transform active:scale-95", p.highlighted ? "bg-cream text-night" : "bg-ink text-bg")}
+                className={cn("mt-10 flex h-12 items-center justify-center gap-2 rounded-[var(--radius)] text-sm font-medium transition-transform active:scale-95", p.highlighted ? "bg-cream text-night" : "bg-ink text-bg")}
               >
                 Join {p.name} <ArrowUpRight size={15} />
               </Link>
@@ -215,7 +215,7 @@ export function Testimonials() {
         </div>
         <div className="mt-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <SafeImg src={t.image} alt={t.name} className="h-14 w-14 rounded-full object-cover" />
+            <SafeImg src={t.image} alt={t.name} className="h-14 w-14 rounded-[var(--radius)] object-cover" />
             <div>
               <div className="font-medium">{t.name}</div>
               <div className="text-sm text-cream/50">{t.role}</div>
@@ -228,7 +228,7 @@ export function Testimonials() {
           </div>
           <div className="flex items-center gap-2">
             {list.map((x, k) => (
-              <button key={x.id} onClick={() => setI(k)} className="relative h-1 w-12 overflow-hidden rounded-full bg-cream/15" aria-label={`Testimonial ${k + 1}`}>
+              <button key={x.id} onClick={() => setI(k)} className="relative h-1 w-12 overflow-hidden rounded-[var(--radius)] bg-cream/15" aria-label={`Testimonial ${k + 1}`}>
                 {k === i && <motion.span className="absolute inset-y-0 left-0 bg-accent" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: 7, ease: "linear" }} />}
                 {k < i && <span className="absolute inset-0 bg-cream/50" />}
               </button>
@@ -254,7 +254,7 @@ export function Offers() {
             <div className="group relative overflow-hidden rounded-[var(--radius)] bg-ink text-cream">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <SafeImg src={o.image} alt="" className="h-full w-full object-cover opacity-80 transition-transform duration-1000 group-hover:scale-105" />
-                <div className="absolute left-4 top-4 flex h-20 w-20 rotate-[-8deg] items-center justify-center rounded-full bg-accent text-center font-serif text-2xl leading-none text-white">
+                <div className="absolute left-4 top-4 flex h-20 w-20 rotate-[-8deg] items-center justify-center rounded-[var(--radius)] bg-accent text-center font-serif text-2xl leading-none text-white">
                   {o.discount}
                   <br />
                   {o.discount.includes("%") || o.discount.includes("k") ? <span className="text-xs">off</span> : null}
@@ -270,7 +270,7 @@ export function Offers() {
                       setCopied(o.code);
                       setTimeout(() => setCopied(""), 1600);
                     }}
-                    className="flex items-center gap-2 rounded-full border border-dashed border-cream/30 px-4 py-2 font-mono text-sm"
+                    className="flex items-center gap-2 rounded-[var(--radius)] border border-dashed border-cream/30 px-4 py-2 font-mono text-sm"
                   >
                     {copied === o.code ? <Check size={14} /> : <Copy size={14} />} {o.code}
                   </button>
@@ -290,12 +290,12 @@ export function Journal() {
   const posts = useStore((s) => s.posts).filter((p) => p.published).slice(0, 3);
   return (
     <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
+      <SectionLabel index="09">Journal</SectionLabel>
       <div className="flex items-end justify-between gap-6">
         <div>
-          <SectionLabel index="09">Journal</SectionLabel>
           <SplitText as="h2" text="Notes on beauty." className="display mt-6 text-[12vw] md:text-[6vw]" />
         </div>
-        <Link href="/journal" className="link-underline hidden text-sm md:block">
+        <Link href="/journal" className="wide hidden border-b border-ink pb-1 hover:text-accent md:block">
           All stories
         </Link>
       </div>
@@ -340,7 +340,7 @@ export function Faq() {
             <div key={f.id} className="border-b hairline">
               <button onClick={() => setOpen(isOpen ? null : f.id)} className="flex w-full items-center justify-between gap-6 py-6 text-left">
                 <span className="display text-2xl md:text-3xl">{f.question}</span>
-                <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline transition-all duration-500", isOpen && "rotate-180 bg-ink text-bg")}>
+                <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius)] border hairline transition-all duration-500", isOpen && "rotate-180 bg-ink text-bg")}>
                   {isOpen ? <Minus size={16} /> : <Plus size={16} />}
                 </span>
               </button>
@@ -368,7 +368,7 @@ export function Cta() {
   const [sent, setSent] = useState(false);
   return (
     <section className="px-3 pb-3 md:px-5 md:pb-5">
-      <div className="relative overflow-hidden rounded-[calc(var(--radius)*1.3)] bg-accent px-6 py-20 text-white md:px-16 md:py-32">
+      <div className="relative overflow-hidden rounded-[var(--radius)] bg-accent px-6 py-20 text-white md:px-16 md:py-32">
         <div className="absolute -right-20 -top-20 hidden h-[420px] w-[320px] rotate-6 overflow-hidden rounded-[999px] opacity-90 md:block">
           <SafeImg src={gallery[1]?.image} alt="" className="h-full w-full object-cover" />
         </div>
@@ -377,7 +377,7 @@ export function Cta() {
           <SplitText as="h2" text="Take an hour. Leave luminous." className="display mt-6 text-[14vw] md:text-[7vw]" />
           <div className="mt-10 flex flex-col gap-4 md:flex-row md:items-center">
             <Magnetic>
-              <Link href="/book" className="flex h-14 items-center gap-2 rounded-full bg-white px-8 text-[15px] font-medium text-ink">
+              <Link href="/book" className="flex h-14 items-center gap-2 rounded-[var(--radius)] bg-white px-8 text-[15px] font-medium text-ink">
                 Book online <ArrowUpRight size={17} />
               </Link>
             </Magnetic>
@@ -389,7 +389,7 @@ export function Cta() {
                 setSent(true);
                 setPhone("");
               }}
-              className="flex h-14 items-center rounded-full border border-white/40 pl-5 pr-1.5"
+              className="flex h-14 items-center rounded-[var(--radius)] border border-white/40 pl-5 pr-1.5"
             >
               <input
                 type="tel"
@@ -398,7 +398,7 @@ export function Cta() {
                 placeholder={sent ? "We'll call you shortly ✓" : "Or request a callback"}
                 className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-white/70"
               />
-              <button className="h-11 rounded-full bg-night px-5 text-sm">Call me</button>
+              <button className="h-11 rounded-[var(--radius)] bg-night px-5 text-sm">Call me</button>
             </form>
           </div>
           <p className="mt-6 text-sm text-white/70">

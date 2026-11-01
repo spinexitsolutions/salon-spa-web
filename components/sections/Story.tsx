@@ -13,10 +13,10 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Clock } from "lucide-react";
+import { ArrowUpRight, Clock, Plus } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn, formatPrice } from "@/lib/utils";
-import { Counter, EASE, Reveal, SafeImg, SectionLabel, SplitText } from "@/components/motion";
+import { Counter, EASE, Reveal, SafeImg, SectionLabel, Shutter, SplitText } from "@/components/motion";
 
 /* ───────────── Marquee (velocity-reactive) ───────────── */
 export function Marquee() {
@@ -81,7 +81,7 @@ function InlineImg({ src, progress, range }: { src?: string; progress: MotionVal
   const w = useTransform(progress, range, ["0em", "1.9em"]);
   const r = useTransform(progress, range, [-12, 0]);
   return (
-    <motion.span style={{ width: w, rotate: r }} className="mr-[0.22em] inline-block h-[0.82em] overflow-hidden rounded-full align-[-0.06em]">
+    <motion.span style={{ width: w, rotate: r }} className="mr-[0.22em] inline-block h-[0.82em] overflow-hidden rounded-[var(--radius)] align-[-0.06em]">
       <SafeImg src={src} alt="" className="h-full w-[1.9em] max-w-none object-cover" />
     </motion.span>
   );
@@ -95,11 +95,8 @@ export function Philosophy() {
   const imgs = [gallery[1]?.image, gallery[3]?.image, gallery[7]?.image, gallery[10]?.image];
   const tokens = `${settings.brandName} is where beauty {0} slows down. Hair, skin {1} and body rituals by artists who listen first {2} and rush never. You leave lighter {3} — every single time.`.split(" ");
   return (
-    <section className="mx-auto max-w-[1440px] px-4 py-24 md:px-8 md:py-40">
-      <div className="flex items-center justify-between">
-        <SectionLabel index="01">Our philosophy</SectionLabel>
-        <span className="hidden text-[13px] text-soft md:block">Since 2014 · Bandra, Mumbai</span>
-      </div>
+    <section className="px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-20">
+      <SectionLabel index="01">Our philosophy</SectionLabel>
       <div ref={ref} className="display mt-10 text-[10.5vw] leading-[1] md:text-[6.2vw] md:leading-[0.98]">
         {tokens.map((t, i) => {
           const range: [number, number] = [i / tokens.length, (i + 1) / tokens.length];
@@ -112,7 +109,7 @@ export function Philosophy() {
           );
         })}
       </div>
-      <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-14 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
           ["Clean formulas", "Olaplex, Kérastase & Dermalogica only."],
           ["Unhurried time", "We never double-book an artist."],
@@ -120,9 +117,9 @@ export function Philosophy() {
           ["Free consults", "Every visit starts with a chat."],
         ].map(([t, d], i) => (
           <Reveal key={t} delay={i * 0.06}>
-            <div className="group h-full rounded-[calc(var(--radius)*0.8)] border border-ink/10 p-5 transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white">
+            <div className="group h-full rounded-[var(--radius)] border border-ink/10 p-5 transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white">
               <div className="text-[26px] font-semibold tracking-tight">0{i + 1}</div>
-              <div className="mt-8 text-[17px] font-semibold">{t}</div>
+              <div className="mt-5 text-[16px] font-semibold md:mt-8 md:text-[17px]">{t}</div>
               <div className="mt-1 text-[14px] opacity-60">{d}</div>
             </div>
           </Reveal>
@@ -132,186 +129,176 @@ export function Philosophy() {
   );
 }
 
-/* ───────────── Services menu with cursor-follow preview ───────────── */
+/* ───────────── Services — printed price list, rows unfold inline ───────────── */
 export function ServicesMenu() {
   const categories = useStore((s) => s.categories).filter((c) => c.published);
   const services = useStore((s) => s.services).filter((s) => s.published);
   const currency = useStore((s) => s.settings.currency);
   const [cat, setCat] = useState(categories[0]?.id ?? "");
-  const [hover, setHover] = useState<string | null>(null);
+  const [open, setOpen] = useState<string | null>(null);
   const list = services.filter((s) => s.category === cat);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const x = useSpring(mx, { stiffness: 150, damping: 20 });
-  const y = useSpring(my, { stiffness: 150, damping: 20 });
-  const hovered = services.find((s) => s.id === hover);
+  const current = categories.find((c) => c.id === cat);
 
   return (
-    <section id="services" className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-32">
-      <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-        <div>
-          <SectionLabel index="02">The menu</SectionLabel>
-          <SplitText as="h2" text="Rituals for every part of you." className="display mt-6 max-w-3xl text-[12vw] md:text-[6vw]" />
-        </div>
-        <Link href="/services" className="group flex items-center gap-2 text-sm">
-          <span className="link-underline">Full menu & prices</span>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-bg transition-transform group-hover:rotate-45">
-            <ArrowUpRight size={15} />
-          </span>
-        </Link>
-      </div>
-
-      {/* category tabs */}
-      <div className="no-scrollbar -mx-5 mt-10 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
-        {categories.map((c) => (
-          <button
-            key={c.id}
-            onClick={() => setCat(c.id)}
-            className={cn("relative shrink-0 rounded-full px-5 py-2.5 text-sm transition-colors", cat === c.id ? "text-bg" : "bg-soft hover:bg-ink/10")}
-          >
-            {cat === c.id && <motion.span layoutId="cat-pill" className="absolute inset-0 rounded-full bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
-            <span className="relative">{c.name}</span>
-          </button>
-        ))}
-      </div>
-
-      <div
-        className="relative mt-8"
-        onPointerMove={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          mx.set(e.clientX - r.left);
-          my.set(e.clientY - r.top);
-        }}
-        onPointerLeave={() => setHover(null)}
-      >
-        <AnimatePresence mode="wait">
-          <motion.ul key={cat} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.5, ease: EASE }}>
-            {list.map((s, i) => (
-              <li key={s.id} onPointerEnter={(e) => e.pointerType === "mouse" && setHover(s.id)}>
-                <Link
-                  href={`/book?service=${s.id}`}
-                  data-cursor="Book"
-                  className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 border-b hairline py-5 md:grid-cols-[60px_1fr_160px_140px_40px] md:py-7"
-                >
-                  <SafeImg src={s.image} alt="" className="h-16 w-16 rounded-2xl object-cover md:hidden" />
-                  <span className="eyebrow hidden text-soft md:block">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="min-w-0">
-                    <span className="display block text-[26px] transition-all duration-500 group-hover:translate-x-2 md:text-[44px]">{s.name}</span>
-                    <span className="mt-1 line-clamp-1 block text-[13px] text-soft md:hidden">
-                      {s.duration} min · {formatPrice(s.price, currency)}
-                    </span>
-                  </span>
-                  <span className="hidden items-center gap-2 text-sm text-soft md:flex">
-                    <Clock size={14} /> {s.duration} min
-                  </span>
-                  <span className="hidden text-right text-lg md:block">{formatPrice(s.price, currency)}</span>
-                  <span className="flex h-9 w-9 items-center justify-center justify-self-end rounded-full border hairline transition-all duration-500 group-hover:bg-accent group-hover:text-white md:h-10 md:w-10">
-                    <ArrowUpRight size={16} />
-                  </span>
-                </Link>
-              </li>
+    <section id="services" className="px-4 py-20 md:px-8 md:py-28">
+      <SectionLabel index="02">Price list</SectionLabel>
+      <div className="mt-6 grid gap-8 md:grid-cols-12">
+        <div className="md:col-span-4">
+          <SplitText as="h2" text="The menu, priced plainly." className="display text-[17vw] md:text-[6.5vw]" />
+          <div className="mt-6 grid grid-cols-3 gap-px border border-ink/20 bg-ink/20 md:grid-cols-2">
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => {
+                  setCat(c.id);
+                  setOpen(null);
+                }}
+                className={cn("wide relative h-12 px-3 text-left transition-colors", cat === c.id ? "bg-ink text-bg" : "bg-[var(--shutter,var(--c-bg))] hover:text-accent")}
+              >
+                {c.name}
+                <span className="absolute right-2 top-2 text-[9px] opacity-50">{services.filter((s) => s.category === c.id).length}</span>
+              </button>
             ))}
-          </motion.ul>
-        </AnimatePresence>
+          </div>
+          <Link href="/services" className="wide mt-4 inline-flex items-center gap-2 border-b border-ink pb-1 hover:text-accent">
+            Full menu <ArrowUpRight size={14} />
+          </Link>
+        </div>
 
-        {/* floating preview */}
-        <motion.div
-          className="pointer-events-none absolute left-0 top-0 z-10 hidden h-[260px] w-[200px] overflow-hidden rounded-[22px] shadow-2xl md:block"
-          style={{ x, y, translateX: "-50%", translateY: "-50%" }}
-          animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.6, rotate: hovered ? -4 : 0 }}
-          transition={{ duration: 0.35, ease: EASE }}
-        >
-          <AnimatePresence mode="popLayout">
-            {hovered && (
-              <motion.img
-                key={hovered.id}
-                src={hovered.image}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover"
-                initial={{ opacity: 0, scale: 1.2 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45 }}
-              />
-            )}
+        <div className="md:col-span-8">
+          <div className="wide flex justify-between border-b-2 border-ink pb-2">
+            <span>
+              {current?.name} — {current?.tagline}
+            </span>
+            <span className="hidden sm:inline">Time · Price</span>
+          </div>
+          <AnimatePresence mode="wait">
+            <motion.ul key={cat} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+              {list.map((s, i) => {
+                const isOpen = open === s.id;
+                return (
+                  <li key={s.id} className="border-b border-ink/15">
+                    <button onClick={() => setOpen(isOpen ? null : s.id)} className="group flex w-full items-baseline gap-3 py-4 text-left">
+                      <span className="wide w-6 shrink-0 text-accent">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="display text-[30px] transition-colors group-hover:text-accent md:text-[44px]">{s.name}</span>
+                      <span className="leaders" />
+                      <span className="wide hidden shrink-0 text-ink/55 sm:inline">{s.duration} min</span>
+                      <span className="shrink-0 text-[16px] font-semibold tabular-nums md:text-[18px]">{formatPrice(s.price, currency)}</span>
+                      <motion.span animate={{ rotate: isOpen ? 45 : 0 }} className="shrink-0 self-center text-ink/50">
+                        <Plus size={18} />
+                      </motion.span>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} transition={{ duration: 0.55, ease: EASE }} className="overflow-hidden">
+                          <div className="grid gap-4 pb-6 sm:grid-cols-[200px_1fr] sm:pl-9">
+                            <div className="relative aspect-[4/3] overflow-hidden">
+                              <SafeImg src={s.image} alt="" className="h-full w-full object-cover" />
+                              <Shutter slats={4} />
+                            </div>
+                            <div className="flex flex-col justify-between gap-4">
+                              <p className="max-w-md text-[15px] leading-relaxed text-ink/70">{s.description}</p>
+                              <div className="flex items-center gap-4">
+                                <Link href={`/book?service=${s.id}`} className="wide inline-flex h-11 items-center gap-2 bg-accent px-5 text-white">
+                                  Reserve <ArrowUpRight size={14} />
+                                </Link>
+                                <span className="wide flex items-center gap-1.5 text-ink/55">
+                                  <Clock size={13} /> {s.duration} min
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                );
+              })}
+            </motion.ul>
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
 
-/* ───────────── Signature rituals — horizontal pinned scroll ───────────── */
+/* ───────────── Signature rituals — sticky image story ───────────── */
 export function Rituals() {
   const featured = useStore((s) => s.services).filter((s) => s.featured && s.published);
   const currency = useStore((s) => s.settings.currency);
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const track = useRef<HTMLDivElement>(null);
-  const [dist, setDist] = useState(0);
-  useEffect(() => {
-    const m = () => track.current && setDist(Math.max(0, track.current.scrollWidth - window.innerWidth));
-    m();
-    window.addEventListener("resize", m);
-    return () => window.removeEventListener("resize", m);
-  }, [featured.length]);
-  const x = useTransform(scrollYProgress, [0.05, 0.95], [0, -dist]);
-  const bar = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const [active, setActive] = useState(0);
+  const refs = useRef<(HTMLElement | null)[]>([]);
 
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(Number((e.target as HTMLElement).dataset.i))),
+      { rootMargin: "-45% 0px -45% 0px" }
+    );
+    refs.current.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, [featured.length]);
+
+  const cur = featured[active];
   return (
-    <section id="rituals" ref={ref} data-nav="dark" className="relative bg-night text-cream" style={{ height: `${100 + featured.length * 55}vh` }}>
-      <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden">
-        <div className="mx-auto mb-8 flex w-full max-w-[1400px] items-end justify-between px-5 md:mb-12 md:px-10">
-          <div>
-            <SectionLabel index="03" light>
-              Signature rituals
-            </SectionLabel>
-            <h2 className="display mt-5 text-[12vw] md:text-[5.5vw]">
-              Made to <em className="text-accent">linger</em>.
-            </h2>
-          </div>
-          <div className="hidden w-56 md:block">
-            <div className="eyebrow mb-2 text-cream/50">Scroll to explore</div>
-            <div className="h-px w-full bg-cream/15">
-              <motion.div className="h-px bg-accent" style={{ width: bar }} />
+    <section id="rituals" className="bg-night px-4 py-20 text-cream md:px-8 md:py-28" style={{ ["--shutter" as string]: "var(--c-night)" }}>
+      <SectionLabel index="03" light>
+        Signature rituals
+      </SectionLabel>
+      <div className="mt-8 grid gap-10 md:grid-cols-12">
+        <div className="hidden md:col-span-6 md:block">
+          <div className="sticky top-8 h-[calc(100vh-4rem)]">
+            <div className="relative h-full overflow-hidden">
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.div
+                  key={cur?.id}
+                  className="absolute inset-0"
+                  initial={{ clipPath: "inset(100% 0 0 0)" }}
+                  animate={{ clipPath: "inset(0% 0 0 0)" }}
+                  exit={{ opacity: 1 }}
+                  transition={{ duration: 0.9, ease: EASE }}
+                >
+                  <SafeImg src={cur?.image} alt={cur?.name} className="h-full w-full object-cover" />
+                </motion.div>
+              </AnimatePresence>
+              <div className="absolute bottom-0 left-0 z-[3] flex items-end gap-4 bg-night pr-5 pt-3">
+                <span className="display text-[120px] leading-[0.75] text-accent">{String(active + 1).padStart(2, "0")}</span>
+                <span className="wide pb-1 text-cream/60">/ {String(featured.length).padStart(2, "0")}</span>
+              </div>
             </div>
           </div>
         </div>
-        <motion.div ref={track} style={{ x }} className="flex w-max gap-4 pl-5 pr-5 md:gap-6 md:pl-10 md:pr-10">
+        <div className="md:col-span-6">
           {featured.map((s, i) => (
-            <Link
+            <article
               key={s.id}
-              href={`/book?service=${s.id}`}
-              data-cursor="Reserve"
-              className="group relative aspect-[3/4] w-[78vw] shrink-0 overflow-hidden rounded-[var(--radius)] md:aspect-[4/5] md:w-[34vw]"
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              data-i={i}
+              className="flex min-h-[70vh] flex-col justify-center border-b border-cream/15 py-10 md:min-h-[85vh]"
             >
-              <SafeImg src={s.image} alt={s.name} className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-              <div className="eyebrow absolute left-5 top-5 rounded-full bg-white/15 px-3 py-1.5 text-white backdrop-blur-md">
-                {String(i + 1).padStart(2, "0")} / {String(featured.length).padStart(2, "0")}
+              <div className="relative mb-6 aspect-[4/3] overflow-hidden md:hidden">
+                <SafeImg src={s.image} alt="" className="h-full w-full object-cover" />
+                <Shutter />
               </div>
-              <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
-                <h3 className="display text-4xl text-white md:text-5xl">{s.name}</h3>
-                <p className="mt-2 line-clamp-2 max-w-sm text-sm text-white/70">{s.description}</p>
-                <div className="mt-4 flex items-center justify-between text-sm text-white">
-                  <span>
-                    {s.duration} min · {formatPrice(s.price, currency)}
-                  </span>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink transition-transform duration-500 group-hover:rotate-45">
-                    <ArrowUpRight size={16} />
-                  </span>
-                </div>
+              <span className="wide text-accent">Ritual {String(i + 1).padStart(2, "0")}</span>
+              <h3
+                className={cn("display mt-3 text-[17vw] transition-[color,font-variation-settings] duration-700 md:text-[6.5vw]", active === i ? "text-cream" : "text-cream/25")}
+                style={{ ["--wdth" as string]: active === i ? 62 : 100 }}
+              >
+                {s.name}
+              </h3>
+              <p className="mt-4 max-w-md text-[16px] leading-relaxed text-cream/65">{s.description}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <span className="font-serif text-[30px]">{formatPrice(s.price, currency)}</span>
+                <span className="wide text-cream/55">{s.duration} minutes</span>
+                <Link href={`/book?service=${s.id}`} className="wide inline-flex h-11 items-center gap-2 bg-cream px-5 text-night hover:bg-accent hover:text-white">
+                  Reserve this <ArrowUpRight size={14} />
+                </Link>
               </div>
-            </Link>
+            </article>
           ))}
-          <div className="flex w-[60vw] shrink-0 flex-col items-start justify-center pr-10 md:w-[26vw]">
-            <p className="display text-4xl md:text-5xl">Can&apos;t decide?</p>
-            <p className="mt-3 text-cream/60">Let our concierge design a ritual around you.</p>
-            <Link href="/contact" className="mt-6 flex h-12 items-center gap-2 rounded-full bg-cream px-6 text-sm font-medium text-night">
-              Talk to us <ArrowUpRight size={15} />
-            </Link>
-          </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -322,7 +309,7 @@ export function Stats() {
   const stats = useStore((s) => s.stats).filter((s) => s.published);
   const styles = ["bg-accent text-white md:row-span-2", "bg-ink text-bg", "bg-white text-ink border border-ink/10", "bg-[color-mix(in_oklab,var(--c-accent)_14%,var(--c-bg))] text-ink"];
   return (
-    <section className="mx-auto max-w-[1440px] px-4 py-20 md:px-8 md:py-28">
+    <section className="px-4 py-20 md:px-8 md:py-28">
       <div className="grid auto-rows-[minmax(170px,auto)] grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {stats.map((s, i) => (
           <Reveal key={s.id} delay={i * 0.08} className={cn("flex flex-col justify-between rounded-[var(--radius)] p-5 md:p-7", styles[i % styles.length], i === 0 && "col-span-2 md:col-span-2")}>

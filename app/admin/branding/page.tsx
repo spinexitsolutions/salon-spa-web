@@ -7,17 +7,17 @@ import { Card, Input, PageTitle, Toggle } from "@/components/admin/ui";
 import Preview from "@/components/admin/Preview";
 
 const PRESETS: { name: string; t: Partial<Theme> }[] = [
-  { name: "Vermilion", t: { bg: "#F3F1EC", ink: "#111111", accent: "#FF4F2B", night: "#111111", cream: "#F3F1EC" } },
-  { name: "Electric Lilac", t: { bg: "#F4F2F8", ink: "#14121A", accent: "#7C5CFF", night: "#14121A", cream: "#F4F2F8" } },
-  { name: "Cherry", t: { bg: "#F6F1EF", ink: "#160F10", accent: "#D7263D", night: "#160F10", cream: "#F6F1EF" } },
-  { name: "Cobalt", t: { bg: "#F1F3F5", ink: "#0D1117", accent: "#1F5CFF", night: "#0D1117", cream: "#F1F3F5" } },
-  { name: "Hot Pink", t: { bg: "#F7F3F2", ink: "#141012", accent: "#FF3D8B", night: "#141012", cream: "#F7F3F2" } },
+  { name: "Plum & Klein", t: { bg: "#F5F3EF", ink: "#22101E", accent: "#2E3BFF", night: "#22101E", cream: "#F2DCD6" } },
+  { name: "Oxblood", t: { bg: "#F6F2EE", ink: "#2A0A0E", accent: "#B3123A", night: "#2A0A0E", cream: "#EBD3CB" } },
+  { name: "Forest", t: { bg: "#F2F3EE", ink: "#0F1F17", accent: "#1F7A4D", night: "#0F1F17", cream: "#DDE8D3" } },
+  { name: "Lilac Night", t: { bg: "#F4F2F8", ink: "#1B1530", accent: "#6B4BFF", night: "#1B1530", cream: "#DCD3F2" } },
+  { name: "Tangerine", t: { bg: "#F4F2EE", ink: "#161210", accent: "#FF5A1F", night: "#161210", cream: "#F0DCCB" } },
 ];
 
 const FONTS: { id: Theme["displayFont"]; name: string; v: string }[] = [
+  { id: "archivo", name: "Archivo Condensed", v: "var(--font-archivo)" },
   { id: "bricolage", name: "Bricolage Grotesque", v: "var(--font-bricolage)" },
   { id: "syne", name: "Syne", v: "var(--font-syne)" },
-  { id: "unbounded", name: "Unbounded", v: "var(--font-unbounded)" },
 ];
 
 export default function Branding() {
@@ -27,7 +27,7 @@ export default function Branding() {
     { k: "ink", label: "Text" },
     { k: "accent", label: "Accent" },
     { k: "night", label: "Dark sections" },
-    { k: "cream", label: "Light on dark" },
+    { k: "cream", label: "Second tone / on dark" },
   ];
   return (
     <>

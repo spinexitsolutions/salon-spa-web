@@ -18,7 +18,6 @@ export const EASE = [0.16, 1, 0.3, 1] as const;
 export function Reveal({
   children,
   delay = 0,
-  y = 40,
   className,
   once = true,
 }: {
@@ -31,23 +30,20 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, margin: "-10% 0px" }}
-      transition={{ duration: 1.1, ease: EASE, delay }}
+      initial={{ clipPath: "inset(0 0 100% 0)", y: 24 }}
+      whileInView={{ clipPath: "inset(0 0 0% 0)", y: 0 }}
+      viewport={{ once, margin: "-8% 0px" }}
+      transition={{ duration: 1, ease: EASE, delay }}
     >
       {children}
     </motion.div>
   );
 }
 
-/** Masked word-by-word reveal */
+/** Heading that condenses (wide -> ultra-condensed) as it scrolls into view */
 export function SplitText({
   text,
   className,
-  delay = 0,
-  stagger = 0.06,
-  play,
   as = "span",
 }: {
   text: string;
@@ -58,25 +54,14 @@ export function SplitText({
   as?: "span" | "h1" | "h2" | "h3" | "p";
 }) {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
-  const show = play === undefined ? inView : play && inView;
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.98", "start 0.55"] });
+  const w = useTransform(scrollYProgress, [0, 1], [118, 62]);
+  const o = useTransform(scrollYProgress, [0, 0.4], [0.15, 1]);
+  const fvs = useTransform(w, (v) => `"wdth" ${v.toFixed(1)}`);
   const Tag = motion[as];
-  const words = text.split(" ");
   return (
-    <Tag ref={ref as never} className={className} aria-label={text}>
-      {words.map((w, i) => (
-        <span key={i} aria-hidden className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom">
-          <motion.span
-            className="inline-block will-change-transform"
-            initial={{ y: "110%", rotate: 4 }}
-            animate={show ? { y: "0%", rotate: 0 } : { y: "110%", rotate: 4 }}
-            transition={{ duration: 1.1, ease: EASE, delay: delay + i * stagger }}
-          >
-            {w}
-            {i < words.length - 1 ? " " : ""}
-          </motion.span>
-        </span>
-      ))}
+    <Tag ref={ref as never} className={cn(className, "break-words")} style={{ fontVariationSettings: fvs, opacity: o }}>
+      {text}
     </Tag>
   );
 }
@@ -108,14 +93,34 @@ export function ScrollWords({ text, className }: { text: string; className?: str
   );
 }
 
+/** Blinds-style reveal: horizontal slats retract when the image enters */
+export function Shutter({ slats = 6, delay = 0, play }: { slats?: number; delay?: number; play?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const show = play === undefined ? inView : play && inView;
+  return (
+    <div ref={ref} className="pointer-events-none absolute inset-0 z-[2] flex flex-col" aria-hidden>
+      {Array.from({ length: slats }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="w-full flex-1 origin-top bg-[var(--shutter,var(--c-bg))]"
+          initial={{ scaleY: 1.02 }}
+          animate={show ? { scaleY: 0 } : { scaleY: 1.02 }}
+          transition={{ duration: 0.9, ease: EASE, delay: delay + i * 0.07 }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function Parallax({
   src,
   alt = "",
   className,
-  speed = 12,
-  scale = 1.18,
+  speed = 8,
+  scale = 1.12,
 }: {
-  src: string;
+  src?: string;
   alt?: string;
   className?: string;
   speed?: number;
@@ -129,6 +134,7 @@ export function Parallax({
       <motion.div style={{ y, scale }} className="absolute inset-0">
         <SafeImg src={src} alt={alt} className="h-full w-full object-cover" />
       </motion.div>
+      <Shutter />
     </div>
   );
 }
@@ -191,16 +197,13 @@ export function Magnetic({ children, strength = 0.35, className }: { children: R
   );
 }
 
+/** Editorial section rule: index on the left, title on the right, hairline across */
 export function SectionLabel({ index, children, light }: { index: string; children: ReactNode; light?: boolean }) {
   return (
-    <div
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full border py-1 pl-1 pr-3.5 text-[13px] font-medium",
-        light ? "border-white/15 text-cream/80" : "border-ink/10 bg-white/50 text-ink/80"
-      )}
-    >
-      <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-white">{index}</span>
-      {children}
+    <div className={cn("wide flex w-full items-center gap-3 border-t pt-3", light ? "border-cream/25 text-cream/70" : "border-ink/20 text-ink/70")}>
+      <span className="text-accent">§ {index}</span>
+      <span className="h-px flex-1" />
+      <span>{children}</span>
     </div>
   );
 }

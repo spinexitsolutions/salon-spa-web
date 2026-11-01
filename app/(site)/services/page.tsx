@@ -32,8 +32,8 @@ export default function ServicesPage() {
       <PageHeader eyebrow="Service menu" title="The full" italic="menu." intro="Transparent pricing. Every service includes a consultation, a cup of something warm and zero rush." />
 
       {/* sticky category nav */}
-      <div className="sticky top-[78px] z-30 mx-auto max-w-[1400px] px-5 md:top-[88px] md:px-10">
-        <div className="no-scrollbar glass flex gap-1 overflow-x-auto rounded-full border border-black/5 p-1.5 shadow-sm md:w-fit">
+      <div className="sticky top-2 z-30 mx-auto max-w-[1400px] px-5 md:top-4 md:px-10">
+        <div className="no-scrollbar glass flex gap-1 overflow-x-auto rounded-[var(--radius)] border border-black/5 p-1.5 shadow-sm md:w-fit">
           {categories.map((c) => (
             <button
               key={c.id}
@@ -41,9 +41,9 @@ export default function ServicesPage() {
                 const el = document.getElementById(`cat-${c.id}`);
                 if (el) window.__lenis ? window.__lenis.scrollTo(el, { offset: -150 }) : el.scrollIntoView({ behavior: "smooth" });
               }}
-              className={cn("relative shrink-0 rounded-full px-4 py-2 text-sm", active === c.id ? "text-bg" : "hover:bg-black/5")}
+              className={cn("relative shrink-0 rounded-[var(--radius)] px-4 py-2 text-sm", active === c.id ? "text-bg" : "hover:bg-black/5")}
             >
-              {active === c.id && <motion.span layoutId="svc-nav" className="absolute inset-0 rounded-full bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
+              {active === c.id && <motion.span layoutId="svc-nav" className="absolute inset-0 rounded-[var(--radius)] bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
               <span className="relative">{c.name}</span>
             </button>
           ))}
@@ -67,7 +67,7 @@ export default function ServicesPage() {
                 .map((s, i) => (
                   <Reveal key={s.id} delay={i * 0.05}>
                     <div className="group flex gap-5 border-b hairline py-7 last:border-b-0">
-                      <SafeImg src={s.image} alt="" className="h-24 w-20 shrink-0 rounded-2xl object-cover md:h-28 md:w-24" />
+                      <SafeImg src={s.image} alt="" className="h-24 w-20 shrink-0 rounded-[var(--radius)] object-cover md:h-28 md:w-24" />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-4">
                           <h3 className="display text-3xl md:text-4xl">{s.name}</h3>
@@ -78,7 +78,7 @@ export default function ServicesPage() {
                           <span className="flex items-center gap-1.5 text-sm text-soft">
                             <Clock size={14} /> {s.duration} min
                           </span>
-                          <Link href={`/book?service=${s.id}`} className="flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] text-bg transition-transform group-hover:scale-105">
+                          <Link href={`/book?service=${s.id}`} className="flex items-center gap-1.5 rounded-[var(--radius)] bg-ink px-4 py-2 text-[13px] text-bg transition-transform group-hover:scale-105">
                             Book <ArrowUpRight size={13} />
                           </Link>
                         </div>

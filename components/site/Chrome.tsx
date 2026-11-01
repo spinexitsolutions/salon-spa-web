@@ -78,7 +78,7 @@ export function Cursor() {
   const size = label ? 88 : hover ? 44 : 12;
   return (
     <motion.div
-      className="pointer-events-none fixed left-0 top-0 z-[300] flex items-center justify-center rounded-full text-[10px] font-medium uppercase tracking-[0.18em] text-white border-solid border-white"
+      className="pointer-events-none fixed left-0 top-0 z-[300] flex items-center justify-center rounded-[var(--radius)] text-[10px] font-medium uppercase tracking-[0.18em] text-white border-solid border-white"
       style={{ x: sx, y: sy, translateX: "-50%", translateY: "-50%", mixBlendMode: label ? "normal" : "difference" }}
       animate={{
         width: size,
@@ -117,14 +117,14 @@ export function WhatsAppFab() {
   if (!wa || path === "/book") return null;
   const visible = introDone && (path !== "/" || scrolled);
   return (
-    <div className="fixed bottom-[max(16px,env(safe-area-inset-bottom))] right-4 z-[95] flex items-center gap-2 md:bottom-6 md:right-6">
+    <div className="fixed bottom-6 right-6 z-[95] hidden items-center gap-2 md:flex">
       <AnimatePresence>
         {tip && (
           <motion.div
             initial={{ opacity: 0, x: 10, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 10 }}
-            className="glass hidden rounded-2xl border border-black/5 px-3.5 py-2 text-[13px] shadow-lg md:block"
+            className="glass hidden rounded-[var(--radius)] border border-black/5 px-3.5 py-2 text-[13px] shadow-lg md:block"
           >
             Questions? Chat with us ✨
           </motion.div>
@@ -140,7 +140,7 @@ export function WhatsAppFab() {
         transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 18 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_12px_30px_-8px_rgba(37,211,102,0.6)]"
+        className="flex h-14 w-14 items-center justify-center bg-[#25D366] text-white shadow-[0_12px_30px_-8px_rgba(37,211,102,0.6)]"
       >
         <MessageCircle size={24} fill="currentColor" strokeWidth={1.5} />
       </motion.a>
