@@ -48,7 +48,7 @@ function ContactForm() {
       <div className="sm:col-span-2">
         <Field label="How can we help?" textarea value={f.message} onChange={(v) => setF({ ...f, message: v })} />
       </div>
-      <button disabled={!f.name || f.phone.length < 8} className="flex h-14 items-center justify-center gap-2 rounded-[var(--radius)] bg-ink text-bg disabled:opacity-40 sm:col-span-2">
+      <button disabled={!f.name || f.phone.length < 8} className="flex h-14 items-center justify-center gap-2 rounded-[var(--radius)] bg-accent text-[#0E0E0E] disabled:opacity-40 sm:col-span-2">
         Send message <Send size={15} />
       </button>
     </form>
@@ -70,8 +70,8 @@ export default function ContactPage() {
             { icon: Mail, label: "Email", value: s.email, href: `mailto:${s.email}` },
           ].map((c, i) => (
             <Reveal key={c.label} delay={i * 0.06}>
-              <a href={c.href} target="_blank" rel="noreferrer" className="group flex items-center gap-4 rounded-[var(--radius)] border hairline p-5 transition-colors hover:bg-white/50">
-                <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius)] bg-ink text-bg transition-transform group-hover:rotate-12">
+              <a href={c.href} target="_blank" rel="noreferrer" className="group flex items-center gap-4 rounded-[var(--radius)] border hairline p-5 transition-colors hover:bg-white/[0.03]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius)] bg-accent text-[#0E0E0E] transition-transform group-hover:rotate-12">
                   <c.icon size={18} />
                 </span>
                 <div>

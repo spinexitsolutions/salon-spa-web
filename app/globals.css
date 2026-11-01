@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --c-bg: #f5f3ef;
-  --c-ink: #22101e;
-  --c-accent: #2e3bff;
-  --c-night: #22101e;
-  --c-cream: #f2dcd6;
-  --radius: 4px;
-  --font-display: var(--font-archivo);
-  --font-body: var(--font-archivo);
+  --c-bg: #0e0e0e;
+  --c-ink: #f3ede3;
+  --c-accent: #c9a96e;
+  --c-night: #16140f;
+  --c-cream: #f3ede3;
+  --radius: 2px;
+  --font-display: var(--font-jost);
+  --font-body: var(--font-jost);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -37,45 +37,50 @@ body {
 
 ::selection {
   background: var(--c-accent);
-  color: #fff;
+  color: #0e0e0e;
 }
 
 body {
-  transition: background-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 300;
+  letter-spacing: 0.01em;
 }
 
 .font-serif {
   font-family: var(--font-display), system-ui, sans-serif;
-  font-weight: 800;
-  font-variation-settings: "wdth" 70;
+  font-weight: 300;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: 0.14em;
 }
 
-/* ultra-condensed poster type */
+/* elegant thin display type */
 .display {
   font-family: var(--font-display), system-ui, sans-serif;
-  font-weight: 800;
-  font-variation-settings: "wdth" var(--wdth, 62);
+  font-weight: 200;
   text-transform: uppercase;
-  letter-spacing: -0.005em;
-  line-height: 0.86;
+  letter-spacing: 0.06em;
+  line-height: 1.04;
 }
 
-/* ultra-expanded micro labels */
+/* tracked micro labels */
 .wide {
   font-family: var(--font-body), system-ui, sans-serif;
-  font-variation-settings: "wdth" 125;
-  font-weight: 600;
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
+}
+
+.gold-text {
+  background: linear-gradient(100deg, #a8864c 0%, #e9d3a1 45%, #c9a96e 60%, #8f6d38 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .leaders {
   flex: 1;
   min-width: 16px;
-  border-bottom: 1.5px dotted color-mix(in oklab, currentColor 35%, transparent);
+  border-bottom: 1px dotted color-mix(in oklab, var(--c-accent) 55%, transparent);
   transform: translateY(-0.28em);
 }
 
@@ -87,10 +92,9 @@ body {
 
 .eyebrow {
   font-family: var(--font-body), system-ui, sans-serif;
-  font-variation-settings: "wdth" 125;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
 }
 

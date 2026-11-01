@@ -30,7 +30,7 @@ export default function PostPage() {
   return (
     <article className="pb-28">
       <motion.div className="fixed left-0 top-0 z-[101] h-[3px] origin-left bg-accent" style={{ scaleX: w, width: "100%" }} />
-      <div className="mx-auto max-w-3xl px-5 pt-10 md:pt-16">
+      <div className="mx-auto max-w-3xl px-5 pt-32 md:pt-40">
         <Link href="/journal" className="eyebrow flex items-center gap-2 text-soft hover:text-ink">
           <ArrowLeft size={12} /> Journal
         </Link>
@@ -39,7 +39,7 @@ export default function PostPage() {
           <span>{formatDate(post.date, { day: "numeric", month: "long", year: "numeric" })}</span>
           <span>{post.readTime}</span>
         </div>
-        <h1 className="display mt-4 text-[13vw] md:text-7xl">{post.title}</h1>
+        <h1 className="display mt-4 text-[7.8vw] md:text-7xl">{post.title}</h1>
         <p className="mt-5 text-xl text-soft">{post.excerpt}</p>
         <div className="mt-4 text-sm">By {post.author}</div>
       </div>

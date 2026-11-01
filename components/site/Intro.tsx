@@ -148,7 +148,7 @@ function Bloom() {
         <div className="absolute inset-0 bg-night/30" />
       </motion.div>
 
-      <Letters word={word} className="display relative z-10 text-[22vw] leading-none text-cream mix-blend-difference md:text-[13vw]" />
+      <Letters word={word} className="display relative z-10 text-[13.2vw] leading-none text-cream mix-blend-difference md:text-[7.8vw]" />
 
       <motion.p
         className="eyebrow relative z-10 mt-6 text-cream/70"
@@ -200,7 +200,7 @@ function Frame() {
         {last && <div className="absolute inset-0 bg-night/35" />}
       </motion.div>
       <div className="relative z-10 flex h-full flex-col items-center justify-center">
-        <Letters word={word} delay={duration * 0.45} className="display text-[20vw] text-cream md:text-[12vw]" />
+        <Letters word={word} delay={duration * 0.45} className="display text-[12vw] text-cream md:text-[7.2vw]" />
         <motion.p
           className="eyebrow mt-4 text-cream/80"
           initial={{ opacity: 0 }}
@@ -218,7 +218,7 @@ function Minimal() {
   const { word, caption, duration } = useIntroData();
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-6">
-      <Letters word={word} className="display text-[18vw] text-cream md:text-[9vw]" />
+      <Letters word={word} className="display text-[10.8vw] text-cream md:text-[5.4vw]" />
       <motion.div
         className="h-px bg-cream/40"
         initial={{ width: 0 }}

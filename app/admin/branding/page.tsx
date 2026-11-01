@@ -7,16 +7,16 @@ import { Card, Input, PageTitle, Toggle } from "@/components/admin/ui";
 import Preview from "@/components/admin/Preview";
 
 const PRESETS: { name: string; t: Partial<Theme> }[] = [
-  { name: "Plum & Klein", t: { bg: "#F5F3EF", ink: "#22101E", accent: "#2E3BFF", night: "#22101E", cream: "#F2DCD6" } },
-  { name: "Oxblood", t: { bg: "#F6F2EE", ink: "#2A0A0E", accent: "#B3123A", night: "#2A0A0E", cream: "#EBD3CB" } },
-  { name: "Forest", t: { bg: "#F2F3EE", ink: "#0F1F17", accent: "#1F7A4D", night: "#0F1F17", cream: "#DDE8D3" } },
-  { name: "Lilac Night", t: { bg: "#F4F2F8", ink: "#1B1530", accent: "#6B4BFF", night: "#1B1530", cream: "#DCD3F2" } },
-  { name: "Tangerine", t: { bg: "#F4F2EE", ink: "#161210", accent: "#FF5A1F", night: "#161210", cream: "#F0DCCB" } },
+  { name: "Black & Gold", t: { bg: "#0E0E0E", ink: "#F3EDE3", accent: "#C9A96E", night: "#16140F", cream: "#F3EDE3" } },
+  { name: "Emerald & Gold", t: { bg: "#0C1F1A", ink: "#F4EEE2", accent: "#D4AF6A", night: "#12291F", cream: "#F4EEE2" } },
+  { name: "Noir & Rose Gold", t: { bg: "#100D0E", ink: "#F5ECE8", accent: "#C99A8E", night: "#1A1416", cream: "#F5ECE8" } },
+  { name: "Midnight & Champagne", t: { bg: "#0B0F1A", ink: "#EEF0F5", accent: "#D8C3A0", night: "#121828", cream: "#EEF0F5" } },
+  { name: "Mocha & Gold", t: { bg: "#1A1411", ink: "#F3E9DE", accent: "#C8A165", night: "#231B16", cream: "#F3E9DE" } },
 ];
 
 const FONTS: { id: Theme["displayFont"]; name: string; v: string }[] = [
-  { id: "archivo", name: "Archivo Condensed", v: "var(--font-archivo)" },
-  { id: "bricolage", name: "Bricolage Grotesque", v: "var(--font-bricolage)" },
+  { id: "jost", name: "Jost (elegant thin)", v: "var(--font-jost)" },
+  { id: "archivo", name: "Archivo", v: "var(--font-archivo)" },
   { id: "syne", name: "Syne", v: "var(--font-syne)" },
 ];
 
@@ -26,8 +26,8 @@ export default function Branding() {
     { k: "bg", label: "Background" },
     { k: "ink", label: "Text" },
     { k: "accent", label: "Accent" },
-    { k: "night", label: "Dark sections" },
-    { k: "cream", label: "Second tone / on dark" },
+    { k: "night", label: "Card / alt sections" },
+    { k: "cream", label: "Light text on cards" },
   ];
   return (
     <>

@@ -131,7 +131,7 @@ export default function Footer() {
       </div>
 
       <div className="relative overflow-hidden">
-        <motion.div style={{ y, paddingTop: "0.18em" }} className="display select-none whitespace-nowrap text-center text-[27vw] leading-[0.8] text-cream/[0.95]">
+        <motion.div style={{ y, paddingTop: "0.18em" }} className="display select-none whitespace-nowrap text-center text-[16.2vw] leading-[0.8] text-cream/[0.95]">
           {s.brandName}
         </motion.div>
       </div>

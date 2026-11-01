@@ -15,7 +15,7 @@ export default function Field({
   textarea?: boolean;
   hint?: string;
 }) {
-  const cls = "peer w-full rounded-[var(--radius)] border hairline bg-white/50 px-4 pb-3 pt-7 text-[15px] outline-none transition-all focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/15";
+  const cls = "peer w-full rounded-[var(--radius)] border hairline bg-white/[0.03] px-4 pb-3 pt-7 text-[15px] outline-none transition-all focus:border-accent focus:bg-white/[0.06] focus:ring-4 focus:ring-accent/15";
   return (
     <label className="relative block">
       {textarea ? (

@@ -1,226 +1,160 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Star } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Star } from "lucide-react";
 import { useStore, useUI } from "@/lib/store";
-import { addDays, cn, formatPrice, formatTime, slotsFor, toISODate } from "@/lib/utils";
-import { EASE, SafeImg, Shutter } from "@/components/motion";
+import { EASE } from "@/components/motion";
 
-/** Brand name sized to exactly fill the column, condensing into place on load */
-function Masthead({ text, play }: { text: string; play: boolean }) {
-  const wrap = useRef<HTMLDivElement>(null);
-  const probe = useRef<HTMLSpanElement>(null);
-  const [size, setSize] = useState(0);
-  useLayoutEffect(() => {
-    const fit = () => {
-      if (!wrap.current || !probe.current) return;
-      const w = probe.current.getBoundingClientRect().width;
-      if (w) setSize((wrap.current.clientWidth / w) * 100 * 0.995);
-    };
-    fit();
-    document.fonts?.ready.then(fit);
-    const ro = new ResizeObserver(fit);
-    if (wrap.current) ro.observe(wrap.current);
-    return () => ro.disconnect();
-  }, [text]);
-  return (
-    <div ref={wrap} className="relative overflow-hidden">
-      <span ref={probe} aria-hidden className="display invisible absolute left-0 top-0 whitespace-nowrap" style={{ fontSize: 100, ["--wdth" as string]: 62 }}>
-        {text}
-      </span>
-      <h1
-        className="display whitespace-nowrap leading-[0.8] transition-[font-variation-settings] duration-[1600ms] ease-[cubic-bezier(.16,1,.3,1)]"
-        style={{ fontSize: size || "22vw", ["--wdth" as string]: play ? 62 : 125 }}
-      >
-        {text.split("").map((ch, i) => (
-          <span key={i} className="inline-block overflow-hidden pt-[0.16em] align-bottom">
-            <motion.span className="inline-block" initial={{ y: "100%" }} animate={play ? { y: "0%" } : {}} transition={{ duration: 1.1, ease: EASE, delay: i * 0.05 }}>
-              {ch}
-            </motion.span>
-          </span>
-        ))}
-      </h1>
-    </div>
-  );
-}
+const SLIDE_MS = 6500;
 
 export default function Hero() {
   const hero = useStore((s) => s.hero);
   const settings = useStore((s) => s.settings);
   const categories = useStore((s) => s.categories);
-  const services = useStore((s) => s.services);
-  const appointments = useStore((s) => s.appointments);
-  const team = useStore((s) => s.team);
   const play = useUI((s) => s.introDone);
-  const [hover, setHover] = useState<string | null>(null);
-  const [now, setNow] = useState<Date | null>(null);
-  useEffect(() => setNow(new Date()), []);
 
-  const index = useMemo(
-    () =>
-      categories
-        .filter((c) => c.published)
-        .map((c) => {
-          const list = services.filter((s) => s.published && s.category === c.id);
-          return { ...c, from: list.length ? Math.min(...list.map((s) => s.price)) : 0 };
-        }),
-    [categories, services]
-  );
+  const slides = useMemo(() => {
+    const imgs = [hero.image, ...categories.filter((c) => c.published).map((c) => c.image.replace(/w=\d+/, "w=2400"))];
+    return Array.from(new Set(imgs.filter(Boolean))).slice(0, 5);
+  }, [hero.image, categories]);
+  const words = useMemo(() => hero.words.split(",").map((w) => w.trim()).filter(Boolean), [hero.words]);
 
-  // live openings from real opening hours + existing bookings
-  const openings = useMemo(() => {
-    if (!now) return { label: "Today", date: "", rows: [] as { t: string; free: number }[] };
-    const chairs = Math.max(1, team.filter((t) => t.published).length);
-    for (let d = 0; d < 7; d++) {
-      const date = toISODate(addDays(now, d));
-      const mins = now.getHours() * 60 + now.getMinutes();
-      const rows = slotsFor(settings.hours, date, 30, 60)
-        .filter((t) => d > 0 || Number(t.slice(0, 2)) * 60 + Number(t.slice(3)) > mins + 30)
-        .map((t) => ({ t, free: chairs - appointments.filter((a) => a.date === date && a.time === t && a.status !== "cancelled").length }))
-        .filter((r) => r.free > 0)
-        .slice(0, 5);
-      if (rows.length) return { label: d === 0 ? "Today" : d === 1 ? "Tomorrow" : addDays(now, d).toLocaleDateString("en", { weekday: "long" }), date, rows };
-    }
-    return { label: "This week", date: "", rows: [] };
-  }, [now, settings.hours, appointments, team]);
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (!play) return;
+    const t = setTimeout(() => setI((x) => x + 1), SLIDE_MS);
+    return () => clearTimeout(t);
+  }, [i, play]);
+  const idx = i % Math.max(slides.length, 1);
+  const word = words[i % Math.max(words.length, 1)] ?? "";
 
-  const active = index.find((c) => c.id === hover);
-  const image = active?.image ?? hero.image;
-  const words = hero.words.split(",").map((w) => w.trim()).filter(Boolean);
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const contentO = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+
+  const fade = (d: number) => ({
+    initial: { opacity: 0, y: 26, filter: "blur(10px)" },
+    animate: play ? { opacity: 1, y: 0, filter: "blur(0px)" } : {},
+    transition: { duration: 1.4, ease: EASE, delay: d },
+  });
 
   return (
-    <section className="px-4 pb-6 pt-4 md:px-8 md:pb-10 md:pt-6" aria-label="Hero">
-      <motion.div
-        className="wide flex items-center justify-between gap-4 border-b border-ink/25 pb-2 text-ink/70"
-        initial={{ opacity: 0 }}
-        animate={play ? { opacity: 1 } : {}}
-        transition={{ duration: 0.8 }}
-      >
-        <span>
-          Issue {now ? String(Math.ceil((+now - +new Date(now.getFullYear(), 0, 1)) / 864e5)).padStart(3, "0") : "—"} · Vol. {now ? now.getFullYear() : ""}
-        </span>
-        <span className="hidden md:inline">{hero.eyebrow}</span>
-        <span>{now ? now.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" }) : ""}</span>
+    <section ref={ref} className="relative h-[100svh] min-h-[620px] overflow-hidden bg-black" aria-label="Hero">
+      {/* slideshow with slow zoom */}
+      <motion.div className="absolute inset-0" style={{ y: imgY }}>
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={idx}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.8, ease: "easeInOut" }}
+          >
+            <motion.img
+              src={slides[idx]}
+              alt=""
+              className="h-full w-full object-cover"
+              initial={{ scale: 1.18 }}
+              animate={{ scale: 1.02 }}
+              transition={{ duration: SLIDE_MS / 1000 + 2, ease: "linear" }}
+            />
+          </motion.div>
+        </AnimatePresence>
       </motion.div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.25)_0%,rgba(0,0,0,0.7)_100%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-[#0E0E0E]" />
 
-      <Masthead text={settings.brandName} play={play} />
+      {/* centred content */}
+      <motion.div style={{ y: contentY, opacity: contentO }} className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-[#F3EDE3]">
+        <motion.div {...fade(0.1)} className="wide flex items-center gap-4 text-[10px] text-accent md:text-[11px]">
+          <span className="hidden h-px w-14 bg-accent/70 md:block" />
+          {hero.eyebrow}
+          <span className="hidden h-px w-14 bg-accent/70 md:block" />
+        </motion.div>
 
-      <motion.div
-        className="wide no-scrollbar flex justify-between gap-6 overflow-x-auto border-y border-ink/25 py-2.5"
-        initial={{ opacity: 0 }}
-        animate={play ? { opacity: 1 } : {}}
-        transition={{ duration: 0.8, delay: 0.6 }}
-      >
-        {index.map((c, i) => (
-          <Link key={c.id} href={`/services#cat-${c.id}`} onMouseEnter={() => setHover(c.id)} className="shrink-0 hover:text-accent">
-            <span className="text-accent">{String(i + 1).padStart(2, "0")}</span> {c.name}
-          </Link>
-        ))}
-        <span className="shrink-0 text-ink/50">Since 2014</span>
-      </motion.div>
-
-      <div className="mt-6 grid gap-8 md:mt-8 md:grid-cols-12 md:gap-0">
-        {/* image */}
-        <div className="md:order-2 md:col-span-5 md:border-x md:border-ink/20 md:px-6">
-          <div className="relative aspect-[4/5] overflow-hidden bg-ink/5 md:aspect-auto md:h-[66vh]">
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.div
-                key={image}
-                className="absolute inset-0"
-                initial={{ clipPath: "inset(0 0 0 100%)" }}
-                animate={{ clipPath: "inset(0 0 0 0%)" }}
-                exit={{ opacity: 1 }}
-                transition={{ duration: 0.8, ease: EASE }}
+        <h1 className="display mt-7 text-[11.5vw] leading-[1.05] md:text-[6.4vw] lg:text-[92px]">
+          <motion.span {...fade(0.25)} className="block">
+            {hero.line1}
+          </motion.span>
+          <span className="relative block h-[1.1em] overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={word}
+                className="gold-text absolute inset-x-0 block font-[300]"
+                initial={{ opacity: 0, y: "40%", filter: "blur(12px)", letterSpacing: "0.3em" }}
+                animate={play ? { opacity: 1, y: "0%", filter: "blur(0px)", letterSpacing: "0.08em" } : {}}
+                exit={{ opacity: 0, y: "-30%", filter: "blur(12px)" }}
+                transition={{ duration: 1.3, ease: EASE, delay: i === 0 ? 0.4 : 0 }}
               >
-                <SafeImg src={image} alt={active?.name ?? "Studio"} className="h-full w-full object-cover" loading="eager" />
-              </motion.div>
+                {word}
+              </motion.span>
             </AnimatePresence>
-            <Shutter slats={7} delay={0.4} play={play} />
-            <div className="wide absolute left-0 top-0 z-[3] bg-bg px-2.5 py-1.5">{active ? `Now showing — ${active.name}` : "The Bandra studio"}</div>
-          </div>
-          <div className="wide mt-2 flex justify-between text-ink/55">
-            <span>Fig. 1</span>
-            <span>{active ? active.tagline : "Photographed in-house"}</span>
-          </div>
-        </div>
+          </span>
+          {hero.line2 && (
+            <motion.span {...fade(0.45)} className="block">
+              {hero.line2}
+            </motion.span>
+          )}
+        </h1>
 
-        {/* headline + live openings */}
-        <div className="flex flex-col md:order-1 md:col-span-4 md:pr-6">
-          <h2 className="display text-[17vw] md:text-[5.6vw]">
-            {hero.line1} <span className="text-accent">{words[0] ?? ""}</span> {hero.line2}
-          </h2>
-          <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-ink/70">{hero.subtitle}</p>
+        <motion.p {...fade(0.6)} className="mt-6 max-w-[460px] text-[15px] leading-[1.8] text-[#F3EDE3]/70 md:text-[16px]">
+          {hero.subtitle}
+        </motion.p>
 
-          <div className="relative mt-6 bg-night p-5 text-cream md:mt-auto">
-            <span className="absolute -left-2 top-[52px] h-4 w-4 rounded-[50%] bg-[var(--shutter,var(--c-bg))]" />
-            <span className="absolute -right-2 top-[52px] h-4 w-4 rounded-[50%] bg-[var(--shutter,var(--c-bg))]" />
-            <div className="flex items-baseline justify-between border-b border-dashed border-cream/25 pb-3">
-              <span className="font-serif text-[26px] leading-none">{openings.label}&apos;s openings</span>
-              <span className="wide flex items-center gap-1.5 text-cream/60">
-                <span className="h-1.5 w-1.5 animate-pulse bg-emerald-400" /> Live
-              </span>
-            </div>
-            <ul className="mt-2">
-              {openings.rows.map((r) => (
-                <li key={r.t}>
-                  <Link href={`/book?date=${openings.date}`} className="group flex items-baseline gap-2 py-1.5 text-[14px]">
-                    <span className="font-serif text-[20px] tabular-nums">{formatTime(r.t)}</span>
-                    <span className="leaders" />
-                    <span className="wide text-cream/55">
-                      {r.free} {r.free === 1 ? "chair" : "chairs"}
-                    </span>
-                    <ArrowUpRight size={14} className="translate-y-0.5 text-cream/40 transition-colors group-hover:text-accent" />
-                  </Link>
-                </li>
-              ))}
-              {!openings.rows.length && <li className="py-2 text-[14px] text-cream/60">Fully booked — call us for a waitlist spot.</li>}
-            </ul>
-          </div>
-        </div>
+        <motion.div {...fade(0.75)} className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+          <Link href="/book" className="wide group relative flex h-14 w-64 items-center justify-center overflow-hidden bg-accent text-[#0E0E0E] sm:w-auto sm:px-10">
+            <span className="absolute inset-0 -translate-x-full bg-[#F3EDE3] transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-x-0" />
+            <span className="relative">{hero.ctaPrimary}</span>
+          </Link>
+          <Link href="/services" className="wide flex h-14 w-64 items-center justify-center border border-[#F3EDE3]/30 text-[#F3EDE3] transition-colors duration-500 hover:border-accent hover:text-accent sm:w-auto sm:px-10">
+            {hero.ctaSecondary}
+          </Link>
+        </motion.div>
+      </motion.div>
 
-        {/* the index */}
-        <div className="md:order-3 md:col-span-3 md:pl-6">
-          <div className="wide flex justify-between border-b border-ink/25 pb-2 text-ink/60">
-            <span>The index</span>
-            <span>From</span>
-          </div>
-          <ul>
-            {index.map((c, i) => (
-              <li key={c.id} onMouseEnter={() => setHover(c.id)} onMouseLeave={() => setHover(null)}>
-                <Link href={`/services#cat-${c.id}`} className="group flex items-baseline gap-2 border-b border-ink/10 py-2">
-                  <span className="wide w-5 text-accent">{String(i + 1).padStart(2, "0")}</span>
-                  <span className={cn("display text-[34px] transition-all duration-500 group-hover:text-accent md:text-[2.5vw]")} style={{ ["--wdth" as string]: hover === c.id ? 100 : 62 }}>
-                    {c.name}
-                  </span>
-                  <span className="leaders" />
-                  <span className="text-[13px] tabular-nums">{formatPrice(c.from, settings.currency)}</span>
-                </Link>
-              </li>
+      {/* bottom bar */}
+      <motion.div
+        className="absolute inset-x-0 bottom-0 z-10 mx-auto flex max-w-[1440px] items-end justify-between px-5 pb-7 text-[#F3EDE3] md:px-10 md:pb-9"
+        initial={{ opacity: 0 }}
+        animate={play ? { opacity: 1 } : {}}
+        transition={{ duration: 1.2, delay: 1 }}
+      >
+        <div className="hidden items-center gap-3 md:flex">
+          <div className="flex gap-0.5 text-accent">
+            {Array.from({ length: 5 }).map((_, k) => (
+              <Star key={k} size={12} className="fill-current" />
             ))}
-          </ul>
-          <div className="mt-5 flex items-end justify-between border-b border-ink/25 pb-4">
-            <div>
-              <div className="display text-[64px]">{settings.rating}</div>
-              <div className="wide text-ink/60">{settings.reviewsCount} reviews</div>
-            </div>
-            <div className="flex gap-0.5 pb-1 text-accent">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={14} className="fill-current" />
-              ))}
-            </div>
           </div>
-          <div className="mt-4 grid gap-2">
-            <Link href="/book" className="wide group flex h-12 items-center justify-between bg-accent px-4 text-white">
-              {hero.ctaPrimary} <ArrowUpRight size={16} className="transition-transform group-hover:rotate-45" />
-            </Link>
-            <Link href="/services" className="wide flex h-12 items-center justify-between border border-ink/30 px-4 hover:bg-ink hover:text-bg">
-              {hero.ctaSecondary} <ArrowUpRight size={16} />
-            </Link>
+          <span className="wide text-[10px] text-[#F3EDE3]/70">
+            {settings.rating} · {settings.reviewsCount} reviews
+          </span>
+        </div>
+
+        <div className="absolute left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex">
+          <span className="wide text-[9px] text-[#F3EDE3]/55">Scroll</span>
+          <span className="relative h-12 w-px overflow-hidden bg-white/15">
+            <motion.span className="absolute inset-x-0 top-0 h-1/2 bg-accent" animate={{ y: ["-100%", "200%"] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+          </span>
+        </div>
+
+        <div className="ml-auto flex items-center gap-4">
+          <span className="wide text-[10px] tabular-nums">
+            <span className="text-accent">{String(idx + 1).padStart(2, "0")}</span> / {String(slides.length).padStart(2, "0")}
+          </span>
+          <div className="flex gap-1.5">
+            {slides.map((_, k) => (
+              <button key={k} onClick={() => setI(i + ((k - idx + slides.length) % slides.length))} className="relative h-px w-7 overflow-hidden bg-white/25 py-0" aria-label={`Slide ${k + 1}`}>
+                {k === idx && play && <motion.span key={i} className="absolute inset-y-0 left-0 bg-accent" initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: SLIDE_MS / 1000, ease: "linear" }} />}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

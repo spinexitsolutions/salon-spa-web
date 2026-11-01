@@ -18,6 +18,7 @@ export const EASE = [0.16, 1, 0.3, 1] as const;
 export function Reveal({
   children,
   delay = 0,
+  y = 40,
   className,
   once = true,
 }: {
@@ -30,20 +31,22 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ clipPath: "inset(0 0 100% 0)", y: 24 }}
-      whileInView={{ clipPath: "inset(0 0 0% 0)", y: 0 }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, margin: "-8% 0px" }}
-      transition={{ duration: 1, ease: EASE, delay }}
+      transition={{ duration: 1.4, ease: EASE, delay }}
     >
       {children}
     </motion.div>
   );
 }
 
-/** Heading that condenses (wide -> ultra-condensed) as it scrolls into view */
+/** Elegant heading: words drift up out of a soft blur, one after another */
 export function SplitText({
   text,
   className,
+  delay = 0,
+  stagger = 0.08,
   as = "span",
 }: {
   text: string;
@@ -53,15 +56,24 @@ export function SplitText({
   play?: boolean;
   as?: "span" | "h1" | "h2" | "h3" | "p";
 }) {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.98", "start 0.55"] });
-  const w = useTransform(scrollYProgress, [0, 1], [118, 62]);
-  const o = useTransform(scrollYProgress, [0, 0.4], [0.15, 1]);
-  const fvs = useTransform(w, (v) => `"wdth" ${v.toFixed(1)}`);
   const Tag = motion[as];
+  const words = text.split(" ");
   return (
-    <Tag ref={ref as never} className={cn(className, "break-words")} style={{ fontVariationSettings: fvs, opacity: o }}>
-      {text}
+    <Tag className={className} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-10% 0px" }} aria-label={text}>
+      {words.map((w, i) => (
+        <motion.span
+          key={i}
+          aria-hidden
+          className="inline-block"
+          variants={{
+            hidden: { opacity: 0, y: 24, filter: "blur(10px)" },
+            show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1.2, ease: EASE, delay: delay + i * stagger } },
+          }}
+        >
+          {w}
+          {i < words.length - 1 ? "\u00A0" : ""}
+        </motion.span>
+      ))}
     </Tag>
   );
 }
@@ -93,23 +105,20 @@ export function ScrollWords({ text, className }: { text: string; className?: str
   );
 }
 
-/** Blinds-style reveal: horizontal slats retract when the image enters */
-export function Shutter({ slats = 6, delay = 0, play }: { slats?: number; delay?: number; play?: boolean }) {
+/** Soft veil that lifts as the image enters (pairs with the slow zoom in Parallax) */
+export function Shutter({ delay = 0, play }: { slats?: number; delay?: number; play?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const show = play === undefined ? inView : play && inView;
   return (
-    <div ref={ref} className="pointer-events-none absolute inset-0 z-[2] flex flex-col" aria-hidden>
-      {Array.from({ length: slats }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="w-full flex-1 origin-top bg-[var(--shutter,var(--c-bg))]"
-          initial={{ scaleY: 1.02 }}
-          animate={show ? { scaleY: 0 } : { scaleY: 1.02 }}
-          transition={{ duration: 0.9, ease: EASE, delay: delay + i * 0.07 }}
-        />
-      ))}
-    </div>
+    <motion.div
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[2] bg-[var(--c-bg)]"
+      initial={{ opacity: 1 }}
+      animate={show ? { opacity: 0 } : { opacity: 1 }}
+      transition={{ duration: 1.6, ease: EASE, delay }}
+    />
   );
 }
 
@@ -129,9 +138,10 @@ export function Parallax({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [`-${speed}%`, `${speed}%`]);
+  const z = useTransform(scrollYProgress, [0, 0.5], [scale + 0.12, scale]);
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.div style={{ y, scale }} className="absolute inset-0">
+      <motion.div style={{ y, scale: z }} className="absolute inset-0">
         <SafeImg src={src} alt={alt} className="h-full w-full object-cover" />
       </motion.div>
       <Shutter />
@@ -197,13 +207,14 @@ export function Magnetic({ children, strength = 0.35, className }: { children: R
   );
 }
 
-/** Editorial section rule: index on the left, title on the right, hairline across */
+/** Luxury section label: thin gold rule + tracked caps */
 export function SectionLabel({ index, children, light }: { index: string; children: ReactNode; light?: boolean }) {
   return (
-    <div className={cn("wide flex w-full items-center gap-3 border-t pt-3", light ? "border-cream/25 text-cream/70" : "border-ink/20 text-ink/70")}>
-      <span className="text-accent">§ {index}</span>
-      <span className="h-px flex-1" />
-      <span>{children}</span>
+    <div className={cn("wide flex items-center gap-4", light ? "text-cream/70" : "text-accent")}>
+      <span className="h-px w-10 bg-accent/70" />
+      <span>
+        {index} — {children}
+      </span>
     </div>
   );
 }

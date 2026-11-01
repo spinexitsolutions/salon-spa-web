@@ -49,7 +49,7 @@ export function Marquee() {
     <div className="flex shrink-0 items-center">
       {words.map((w, i) => (
         <span key={i} className="flex items-center">
-          <span className={cn("display px-6 text-[13vw] md:px-10 md:text-[7.5vw]", i % 2 && "text-accent")}>{w}</span>
+          <span className={cn("display px-6 text-[7.8vw] md:px-10 md:text-[4.5vw]", i % 2 && "text-accent")}>{w}</span>
           <svg width="34" height="34" viewBox="0 0 24 24" className="shrink-0 text-ink/30">
             <path fill="currentColor" d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" />
           </svg>
@@ -97,7 +97,7 @@ export function Philosophy() {
   return (
     <section className="px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-20">
       <SectionLabel index="01">Our philosophy</SectionLabel>
-      <div ref={ref} className="display mt-10 text-[10.5vw] leading-[1] md:text-[6.2vw] md:leading-[0.98]">
+      <div ref={ref} className="display mt-10 text-[6.3vw] leading-[1] md:text-[3.7vw] md:leading-[0.98]">
         {tokens.map((t, i) => {
           const range: [number, number] = [i / tokens.length, (i + 1) / tokens.length];
           const m = t.match(/^\{(\d)\}$/);
@@ -117,7 +117,7 @@ export function Philosophy() {
           ["Free consults", "Every visit starts with a chat."],
         ].map(([t, d], i) => (
           <Reveal key={t} delay={i * 0.06}>
-            <div className="group h-full rounded-[var(--radius)] border border-ink/10 p-5 transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white">
+            <div className="group h-full rounded-[var(--radius)] border border-ink/10 p-5 transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-[#0E0E0E]">
               <div className="text-[26px] font-semibold tracking-tight">0{i + 1}</div>
               <div className="mt-5 text-[16px] font-semibold md:mt-8 md:text-[17px]">{t}</div>
               <div className="mt-1 text-[14px] opacity-60">{d}</div>
@@ -144,7 +144,7 @@ export function ServicesMenu() {
       <SectionLabel index="02">Price list</SectionLabel>
       <div className="mt-6 grid gap-8 md:grid-cols-12">
         <div className="md:col-span-4">
-          <SplitText as="h2" text="The menu, priced plainly." className="display text-[17vw] md:text-[6.5vw]" />
+          <SplitText as="h2" text="The menu, priced plainly." className="display text-[10.2vw] md:text-[3.9vw]" />
           <div className="mt-6 grid grid-cols-3 gap-px border border-ink/20 bg-ink/20 md:grid-cols-2">
             {categories.map((c) => (
               <button
@@ -153,20 +153,20 @@ export function ServicesMenu() {
                   setCat(c.id);
                   setOpen(null);
                 }}
-                className={cn("wide relative h-12 px-3 text-left transition-colors", cat === c.id ? "bg-ink text-bg" : "bg-[var(--shutter,var(--c-bg))] hover:text-accent")}
+                className={cn("wide relative h-12 px-3 text-left transition-colors", cat === c.id ? "bg-accent text-[#0E0E0E]" : "bg-[var(--shutter,var(--c-bg))] hover:text-accent")}
               >
                 {c.name}
                 <span className="absolute right-2 top-2 text-[9px] opacity-50">{services.filter((s) => s.category === c.id).length}</span>
               </button>
             ))}
           </div>
-          <Link href="/services" className="wide mt-4 inline-flex items-center gap-2 border-b border-ink pb-1 hover:text-accent">
+          <Link href="/services" className="wide mt-4 inline-flex items-center gap-2 border-b border-accent pb-1 hover:text-accent">
             Full menu <ArrowUpRight size={14} />
           </Link>
         </div>
 
         <div className="md:col-span-8">
-          <div className="wide flex justify-between border-b-2 border-ink pb-2">
+          <div className="wide flex justify-between border-b-2 border-accent pb-2">
             <span>
               {current?.name} — {current?.tagline}
             </span>
@@ -180,7 +180,7 @@ export function ServicesMenu() {
                   <li key={s.id} className="border-b border-ink/15">
                     <button onClick={() => setOpen(isOpen ? null : s.id)} className="group flex w-full items-baseline gap-3 py-4 text-left">
                       <span className="wide w-6 shrink-0 text-accent">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="display text-[30px] transition-colors group-hover:text-accent md:text-[44px]">{s.name}</span>
+                      <span className="display text-[22px] transition-colors group-hover:text-accent md:text-[30px]">{s.name}</span>
                       <span className="leaders" />
                       <span className="wide hidden shrink-0 text-ink/55 sm:inline">{s.duration} min</span>
                       <span className="shrink-0 text-[16px] font-semibold tabular-nums md:text-[18px]">{formatPrice(s.price, currency)}</span>
@@ -199,7 +199,7 @@ export function ServicesMenu() {
                             <div className="flex flex-col justify-between gap-4">
                               <p className="max-w-md text-[15px] leading-relaxed text-ink/70">{s.description}</p>
                               <div className="flex items-center gap-4">
-                                <Link href={`/book?service=${s.id}`} className="wide inline-flex h-11 items-center gap-2 bg-accent px-5 text-white">
+                                <Link href={`/book?service=${s.id}`} className="wide inline-flex h-11 items-center gap-2 bg-accent px-5 text-[#0E0E0E]">
                                   Reserve <ArrowUpRight size={14} />
                                 </Link>
                                 <span className="wide flex items-center gap-1.5 text-ink/55">
@@ -261,7 +261,7 @@ export function Rituals() {
                 </motion.div>
               </AnimatePresence>
               <div className="absolute bottom-0 left-0 z-[3] flex items-end gap-4 bg-night pr-5 pt-3">
-                <span className="display text-[120px] leading-[0.75] text-accent">{String(active + 1).padStart(2, "0")}</span>
+                <span className="display text-[84px] leading-[0.8] text-accent">{String(active + 1).padStart(2, "0")}</span>
                 <span className="wide pb-1 text-cream/60">/ {String(featured.length).padStart(2, "0")}</span>
               </div>
             </div>
@@ -283,7 +283,7 @@ export function Rituals() {
               </div>
               <span className="wide text-accent">Ritual {String(i + 1).padStart(2, "0")}</span>
               <h3
-                className={cn("display mt-3 text-[17vw] transition-[color,font-variation-settings] duration-700 md:text-[6.5vw]", active === i ? "text-cream" : "text-cream/25")}
+                className={cn("display mt-3 text-[10.2vw] transition-[color,font-variation-settings] duration-700 md:text-[3.9vw]", active === i ? "text-cream" : "text-cream/25")}
                 style={{ ["--wdth" as string]: active === i ? 62 : 100 }}
               >
                 {s.name}
@@ -292,7 +292,7 @@ export function Rituals() {
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <span className="font-serif text-[30px]">{formatPrice(s.price, currency)}</span>
                 <span className="wide text-cream/55">{s.duration} minutes</span>
-                <Link href={`/book?service=${s.id}`} className="wide inline-flex h-11 items-center gap-2 bg-cream px-5 text-night hover:bg-accent hover:text-white">
+                <Link href={`/book?service=${s.id}`} className="wide inline-flex h-11 items-center gap-2 bg-cream px-5 text-night hover:bg-accent hover:text-[#0E0E0E]">
                   Reserve this <ArrowUpRight size={14} />
                 </Link>
               </div>
@@ -307,14 +307,14 @@ export function Rituals() {
 /* ───────────── Stats — bento ───────────── */
 export function Stats() {
   const stats = useStore((s) => s.stats).filter((s) => s.published);
-  const styles = ["bg-accent text-white md:row-span-2", "bg-ink text-bg", "bg-white text-ink border border-ink/10", "bg-[color-mix(in_oklab,var(--c-accent)_14%,var(--c-bg))] text-ink"];
+  const styles = ["bg-accent text-[#0E0E0E] md:row-span-2", "bg-night text-ink border border-accent/15", "border border-ink/15 text-ink", "bg-night text-ink"];
   return (
     <section className="px-4 py-20 md:px-8 md:py-28">
       <div className="grid auto-rows-[minmax(170px,auto)] grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {stats.map((s, i) => (
           <Reveal key={s.id} delay={i * 0.08} className={cn("flex flex-col justify-between rounded-[var(--radius)] p-5 md:p-7", styles[i % styles.length], i === 0 && "col-span-2 md:col-span-2")}>
             <div className="text-[13px] font-medium opacity-70">{s.label}</div>
-            <div className={cn("display leading-none", i === 0 ? "text-[30vw] md:text-[13vw]" : "text-[15vw] md:text-[6vw]")}>
+            <div className={cn("display leading-none", i === 0 ? "text-[18vw] md:text-[7.8vw]" : "text-[9vw] md:text-[3.6vw]")}>
               <Counter value={s.value} decimals={s.decimals} />
               <span className={i === 0 ? "" : "text-accent"}>{s.suffix}</span>
             </div>

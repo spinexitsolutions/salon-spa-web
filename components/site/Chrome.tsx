@@ -117,7 +117,7 @@ export function WhatsAppFab() {
   if (!wa || path === "/book") return null;
   const visible = introDone && (path !== "/" || scrolled);
   return (
-    <div className="fixed bottom-6 right-6 z-[95] hidden items-center gap-2 md:flex">
+    <div className="fixed bottom-5 right-4 z-[95] flex items-center gap-2 md:bottom-6 md:right-6">
       <AnimatePresence>
         {tip && (
           <motion.div
@@ -140,7 +140,7 @@ export function WhatsAppFab() {
         transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 18 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
-        className="flex h-14 w-14 items-center justify-center bg-[#25D366] text-white shadow-[0_12px_30px_-8px_rgba(37,211,102,0.6)]"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_12px_30px_-8px_rgba(37,211,102,0.6)]"
       >
         <MessageCircle size={24} fill="currentColor" strokeWidth={1.5} />
       </motion.a>

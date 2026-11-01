@@ -132,7 +132,7 @@ function BookingFlow() {
                 <h2 className="display text-4xl md:text-5xl">Choose your ritual</h2>
                 <div className="no-scrollbar -mx-5 mt-6 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
                   {[{ id: "all", name: "All" }, ...categories.filter((c) => c.published)].map((c) => (
-                    <button key={c.id} onClick={() => setCat(c.id)} className={cn("shrink-0 rounded-[var(--radius)] px-4 py-2 text-sm", cat === c.id ? "bg-ink text-bg" : "bg-soft")}>
+                    <button key={c.id} onClick={() => setCat(c.id)} className={cn("shrink-0 rounded-[var(--radius)] px-4 py-2 text-sm", cat === c.id ? "bg-accent text-[#0E0E0E]" : "bg-soft")}>
                       {c.name}
                     </button>
                   ))}
@@ -156,7 +156,7 @@ function BookingFlow() {
                             <Clock size={12} /> {s.duration} min · {formatPrice(s.price, settings.currency)}
                           </div>
                         </div>
-                        <span className={cn("flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius)] border", serviceId === s.id ? "border-accent bg-accent text-white" : "hairline")}>
+                        <span className={cn("flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius)] border", serviceId === s.id ? "border-accent bg-accent text-[#0E0E0E]" : "hairline")}>
                           {serviceId === s.id && <Check size={13} />}
                         </span>
                       </button>
@@ -173,7 +173,7 @@ function BookingFlow() {
                     onClick={() => setStaffId("any")}
                     className={cn("flex aspect-[3/4] flex-col items-center justify-center gap-3 rounded-[var(--radius)] border p-4 text-center", staffId === "any" ? "border-accent bg-accent/5 ring-4 ring-accent/15" : "hairline")}
                   >
-                    <span className="flex h-16 w-16 items-center justify-center rounded-[var(--radius)] bg-ink text-bg">
+                    <span className="flex h-16 w-16 items-center justify-center rounded-[var(--radius)] bg-accent text-[#0E0E0E]">
                       <Sparkles size={22} />
                     </span>
                     <span className="font-medium">Any available</span>
@@ -194,7 +194,7 @@ function BookingFlow() {
                           <div className="text-xs text-white/70">{t.role}</div>
                         </div>
                         {staffId === t.id && (
-                          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-[var(--radius)] bg-accent text-white">
+                          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-[var(--radius)] bg-accent text-[#0E0E0E]">
                             <Check size={14} />
                           </span>
                         )}
@@ -221,7 +221,7 @@ function BookingFlow() {
                         }}
                         className={cn(
                           "flex w-[68px] shrink-0 flex-col items-center rounded-[var(--radius)] border py-3 transition-all",
-                          date === d ? "border-ink bg-ink text-bg" : "hairline hover:border-ink/30",
+                          date === d ? "border-accent bg-accent text-[#0E0E0E]" : "hairline hover:border-ink/30",
                           closed && "opacity-30"
                         )}
                       >
@@ -241,7 +241,7 @@ function BookingFlow() {
                         onClick={() => setTime(t)}
                         className={cn(
                           "rounded-[var(--radius)] border py-3 text-sm transition-all",
-                          time === t ? "border-accent bg-accent text-white" : "hairline hover:border-ink/40",
+                          time === t ? "border-accent bg-accent text-[#0E0E0E]" : "hairline hover:border-ink/40",
                           disabled && "cursor-not-allowed line-through opacity-30"
                         )}
                       >
@@ -288,7 +288,7 @@ function BookingFlow() {
             <button
               disabled={!canNext}
               onClick={() => (step < 3 ? go(step + 1) : submit())}
-              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius)] bg-accent text-sm font-medium text-white transition-opacity disabled:opacity-40"
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius)] bg-accent text-sm font-medium text-[#0E0E0E] transition-opacity disabled:opacity-40"
             >
               {step < 3 ? "Continue" : "Confirm booking"} <ArrowRight size={15} />
             </button>
@@ -297,7 +297,7 @@ function BookingFlow() {
       </aside>
 
       {/* mobile bottom bar */}
-      <div className="fixed inset-x-0 bottom-[calc(62px+env(safe-area-inset-bottom))] z-[96] flex items-center gap-3 border-t border-ink/15 bg-bg p-2.5 pl-4 shadow-2xl md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-[96] pb-[max(10px,env(safe-area-inset-bottom))] flex items-center gap-3 border-t border-ink/15 bg-bg p-2.5 pl-4 shadow-2xl md:hidden">
         <div className="min-w-0 flex-1">
           <div className="truncate text-[13px] text-soft">{service ? service.name : "No service yet"}</div>
           <div className="font-medium">{formatPrice(total, settings.currency)}</div>
@@ -310,7 +310,7 @@ function BookingFlow() {
         <button
           disabled={!canNext}
           onClick={() => (step < 3 ? go(step + 1) : submit())}
-          className="flex h-12 items-center gap-2 rounded-[var(--radius)] bg-ink px-5 text-sm font-medium text-bg disabled:opacity-40"
+          className="flex h-12 items-center gap-2 rounded-[var(--radius)] bg-accent px-5 text-sm font-medium text-[#0E0E0E] disabled:opacity-40"
         >
           {step < 3 ? "Next" : "Confirm"} <ArrowRight size={15} />
         </button>

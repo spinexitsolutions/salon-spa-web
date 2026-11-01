@@ -29,7 +29,7 @@ export type Theme = {
   accent: string;
   night: string;
   cream: string;
-  displayFont: "archivo" | "bricolage" | "syne";
+  displayFont: "jost" | "archivo" | "syne";
   radius: number;
   cursor: boolean;
   grain: boolean;

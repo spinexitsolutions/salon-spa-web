@@ -13,10 +13,8 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <SmoothScroll />
       <Intro />
       <Navbar />
-      <main className="relative md:pl-[76px]">{children}</main>
-      <div className="pb-[64px] md:pb-0 md:pl-[76px]">
-        <Footer />
-      </div>
+      <main className="relative">{children}</main>
+      <Footer />
       <WhatsAppFab />
       <Cursor />
     </div>

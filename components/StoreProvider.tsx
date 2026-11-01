@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { STORE_KEY, useStore } from "@/lib/store";
 
 const FONT_VAR = {
+  jost: "var(--font-jost)",
   archivo: "var(--font-archivo)",
-  bricolage: "var(--font-bricolage)",
   syne: "var(--font-syne)",
 } as const;
 
@@ -20,7 +20,7 @@ function ThemeVars() {
     r.setProperty("--c-night", theme.night);
     r.setProperty("--c-cream", theme.cream);
     r.setProperty("--radius", `${theme.radius}px`);
-    r.setProperty("--font-display", FONT_VAR[theme.displayFont] ?? FONT_VAR.archivo);
+    r.setProperty("--font-display", FONT_VAR[theme.displayFont] ?? FONT_VAR.jost);
   }, [theme]);
   useEffect(() => {
     if (seo && !location.pathname.startsWith("/admin")) document.title = seo;

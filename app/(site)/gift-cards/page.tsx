@@ -86,7 +86,7 @@ export default function GiftCardsPage() {
           </motion.div>
           <div className="mt-5 flex gap-2">
             {(Object.keys(DESIGNS) as DesignKey[]).map((d) => (
-              <button key={d} onClick={() => setDesign(d)} className={cn("flex items-center gap-2 rounded-[var(--radius)] border px-3 py-1.5 text-sm", design === d ? "border-ink" : "hairline")}>
+              <button key={d} onClick={() => setDesign(d)} className={cn("flex items-center gap-2 rounded-[var(--radius)] border px-3 py-1.5 text-sm", design === d ? "border-accent" : "hairline")}>
                 <span className={cn("h-4 w-4 rounded-[var(--radius)]", DESIGNS[d].cls)} /> {DESIGNS[d].label}
               </button>
             ))}
@@ -125,7 +125,7 @@ export default function GiftCardsPage() {
                 <div className="eyebrow mb-3 text-soft">Amount</div>
                 <div className="grid grid-cols-3 gap-2">
                   {[2500, 5000, 7500, 10000, 15000, 25000].map((a) => (
-                    <button type="button" key={a} onClick={() => setAmount(a)} className={cn("rounded-[var(--radius)] border py-4 text-lg transition-all", amount === a ? "border-ink bg-ink text-bg" : "hairline hover:border-ink/40")}>
+                    <button type="button" key={a} onClick={() => setAmount(a)} className={cn("rounded-[var(--radius)] border py-4 text-lg transition-all", amount === a ? "border-accent bg-accent text-[#0E0E0E]" : "hairline hover:border-ink/40")}>
                       {formatPrice(a, settings.currency)}
                     </button>
                   ))}
@@ -140,7 +140,7 @@ export default function GiftCardsPage() {
                   <Field label="Personal message" textarea value={f.message} onChange={(v) => setF({ ...f, message: v })} />
                 </div>
               </div>
-              <button disabled={f.phone.length < 8} className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius)] bg-accent text-[15px] font-medium text-white disabled:opacity-40">
+              <button disabled={f.phone.length < 8} className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius)] bg-accent text-[15px] font-medium text-[#0E0E0E] disabled:opacity-40">
                 <Gift size={17} /> Send gift card · {formatPrice(amount, settings.currency)}
               </button>
             </form>

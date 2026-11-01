@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Bricolage_Grotesque, Syne } from "next/font/google";
+import { Archivo, Jost, Syne } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import StoreProvider from "@/components/StoreProvider";
 
 const archivo = Archivo({ subsets: ["latin"], variable: "--font-archivo", axes: ["wdth"], display: "swap" });
-const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", axes: ["opsz", "wdth"], display: "swap" });
+const jost = Jost({ subsets: ["latin"], variable: "--font-jost", display: "swap" });
 const syne = Syne({ subsets: ["latin"], variable: "--font-syne", display: "swap" });
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F5F3EF",
+  themeColor: "#0E0E0E",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -22,7 +22,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${bricolage.variable} ${syne.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${jost.variable} ${archivo.variable} ${syne.variable}`} suppressHydrationWarning>
       <body className="bg-bg text-ink font-sans antialiased">
         <StoreProvider>{children}</StoreProvider>
       </body>
