@@ -65,7 +65,7 @@ export default function Clients() {
       />
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="relative md:w-80">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/35" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#F3EDE3]/35" />
           <input className="admin-input pl-9" placeholder="Search clients or tags…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
         <Segmented value={sort} onChange={setSort} options={[{ value: "recent", label: "Newest" }, { value: "spend", label: "Top spend" }, { value: "visits", label: "Most visits" }]} />
@@ -78,32 +78,32 @@ export default function Clients() {
           {list.map((c) => {
             const st = stats[c.id];
             return (
-              <button key={c.id} onClick={() => setEdit(c)} className="rounded-[20px] bg-white p-4 text-left shadow-[0_0_0_1px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:shadow-md">
+              <button key={c.id} onClick={() => setEdit(c)} className="rounded-[20px] bg-[#141310] p-4 text-left shadow-[0_0_0_1px_rgba(201,169,110,0.14)] transition-all hover:-translate-y-0.5 hover:shadow-md">
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-[14px] font-semibold text-accent">{initials(c.name)}</span>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[15px] font-medium">{c.name}</div>
-                    <div className="truncate text-[12.5px] text-black/45">{c.phone}</div>
+                    <div className="truncate text-[12.5px] text-[#F3EDE3]/45">{c.phone}</div>
                   </div>
                 </div>
                 <div className="mt-4 grid grid-cols-3 gap-2 text-[12px]">
                   <div>
-                    <div className="text-black/40">Visits</div>
+                    <div className="text-[#F3EDE3]/40">Visits</div>
                     <div className="text-[15px] font-semibold">{st?.visits ?? 0}</div>
                   </div>
                   <div>
-                    <div className="text-black/40">Spend</div>
+                    <div className="text-[#F3EDE3]/40">Spend</div>
                     <div className="text-[15px] font-semibold">{formatPrice(st?.spend ?? 0, settings.currency)}</div>
                   </div>
                   <div>
-                    <div className="text-black/40">Last</div>
+                    <div className="text-[#F3EDE3]/40">Last</div>
                     <div className="text-[13px] font-medium">{st?.last ? formatDate(st.last) : "—"}</div>
                   </div>
                 </div>
                 {c.tags && (
                   <div className="mt-3 flex flex-wrap gap-1">
                     {c.tags.split(",").map((t) => (
-                      <span key={t} className="rounded-full bg-black/[0.05] px-2 py-0.5 text-[11px]">
+                      <span key={t} className="rounded-full bg-white/[0.05] px-2 py-0.5 text-[11px]">
                         {t.trim()}
                       </span>
                     ))}
@@ -155,14 +155,14 @@ export default function Clients() {
           <div className="space-y-4">
             {edit.id && (
               <div className="grid grid-cols-3 gap-2">
-                <a href={`tel:${edit.phone}`} className="flex flex-col items-center gap-1 rounded-2xl bg-white py-3 text-[12px] shadow-sm">
+                <a href={`tel:${edit.phone}`} className="flex flex-col items-center gap-1 rounded-2xl bg-[#141310] py-3 text-[12px] shadow-sm">
                   <Phone size={16} className="text-accent" /> Call
                 </a>
-                <a href={`https://wa.me/${edit.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 rounded-2xl bg-white py-3 text-[12px] shadow-sm">
+                <a href={`https://wa.me/${edit.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 rounded-2xl bg-[#141310] py-3 text-[12px] shadow-sm">
                   <MessageCircle size={16} className="text-[#25D366]" /> WhatsApp
                 </a>
-                <a href={`mailto:${edit.email}`} className="flex flex-col items-center gap-1 rounded-2xl bg-white py-3 text-[12px] shadow-sm">
-                  <Mail size={16} className="text-sky-600" /> Email
+                <a href={`mailto:${edit.email}`} className="flex flex-col items-center gap-1 rounded-2xl bg-[#141310] py-3 text-[12px] shadow-sm">
+                  <Mail size={16} className="text-sky-400" /> Email
                 </a>
               </div>
             )}
@@ -187,7 +187,7 @@ export default function Clients() {
                     <div key={a.id} className="flex items-center justify-between gap-3 py-2.5">
                       <div className="min-w-0">
                         <div className="truncate text-[13.5px] font-medium">{a.serviceName}</div>
-                        <div className="text-[12px] text-black/45">
+                        <div className="text-[12px] text-[#F3EDE3]/45">
                           {formatDate(a.date, { day: "numeric", month: "short", year: "numeric" })} · {formatTime(a.time)} · {a.staffName}
                         </div>
                       </div>
@@ -197,7 +197,7 @@ export default function Clients() {
                       </div>
                     </div>
                   ))}
-                  {!history.length && <p className="py-4 text-center text-[13px] text-black/40">No visits yet.</p>}
+                  {!history.length && <p className="py-4 text-center text-[13px] text-[#F3EDE3]/40">No visits yet.</p>}
                 </div>
               </Card>
             )}

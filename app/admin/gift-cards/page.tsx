@@ -21,18 +21,18 @@ export default function GiftCards() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="font-mono text-[15px] font-medium tracking-wider">{g.code}</div>
-                  <div className="mt-0.5 text-[12.5px] text-black/45">
+                  <div className="mt-0.5 text-[12.5px] text-[#F3EDE3]/45">
                     {g.from || "—"} → {g.to || "—"} · {formatDate(g.createdAt)}
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-[20px] font-semibold tracking-tight">{formatPrice(g.amount, settings.currency)}</div>
-                  <span className="text-[11px] capitalize text-black/40">{g.design}</span>
+                  <span className="text-[11px] capitalize text-[#F3EDE3]/40">{g.design}</span>
                 </div>
               </div>
-              {g.message && <p className="mt-3 rounded-xl bg-black/[0.03] p-3 text-[13px] italic text-black/60">“{g.message}”</p>}
+              {g.message && <p className="mt-3 rounded-xl bg-white/[0.03] p-3 text-[13px] italic text-[#F3EDE3]/60">“{g.message}”</p>}
               <div className="mt-3 flex items-center justify-between">
-                <div className="text-[12px] text-black/45">
+                <div className="text-[12px] text-[#F3EDE3]/45">
                   {g.buyerPhone} {g.recipientEmail && `· ${g.recipientEmail}`}
                 </div>
                 <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ export default function GiftCards() {
                       ))}
                     </select>
                   </label>
-                  <button onClick={() => confirm("Delete gift card?") && remove("giftCards", g.id)} className="flex h-8 w-8 items-center justify-center rounded-full text-black/35 hover:bg-rose-50 hover:text-rose-600">
+                  <button onClick={() => confirm("Delete gift card?") && remove("giftCards", g.id)} className="flex h-8 w-8 items-center justify-center rounded-full text-[#F3EDE3]/35 hover:bg-rose-500/10 hover:text-rose-300">
                     <Trash2 size={14} />
                   </button>
                 </div>

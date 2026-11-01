@@ -49,24 +49,24 @@ export default function Login() {
           transition={{ duration: 0.45 }}
           className="w-full max-w-[380px]"
         >
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1d1d1f] text-white">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-[#0E0E0E]">
             <Lock size={20} />
           </span>
           <h1 className="mt-6 text-[32px] font-semibold tracking-[-0.03em]">Sign in to Studio</h1>
-          <p className="mt-1 text-[14px] text-black/50">Manage {settings.brandName}&apos;s bookings, CRM and content.</p>
+          <p className="mt-1 text-[14px] text-[#F3EDE3]/50">Manage {settings.brandName}&apos;s bookings, CRM and content.</p>
           <div className="mt-8 space-y-3">
             <input className="admin-input h-12" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
             <input className="admin-input h-12" type="password" placeholder="Password" value={pass} onChange={(e) => setPass(e.target.value)} />
           </div>
-          <label className="mt-3 flex items-center gap-2 text-[13px] text-black/60">
+          <label className="mt-3 flex items-center gap-2 text-[13px] text-[#F3EDE3]/60">
             <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /> Keep me signed in
           </label>
-          {err && <p className="mt-3 text-[13px] text-rose-600">Incorrect email or password.</p>}
-          <button className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1d1d1f] text-[15px] font-medium text-white">
+          {err && <p className="mt-3 text-[13px] text-rose-400">Incorrect email or password.</p>}
+          <button className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-accent text-[15px] font-medium text-[#0E0E0E]">
             Continue <ArrowRight size={16} />
           </button>
-          <div className="mt-6 rounded-2xl bg-white p-4 text-[12.5px] text-black/55 shadow-sm">
-            <div className="font-medium text-black/75">Demo credentials</div>
+          <div className="mt-6 rounded-2xl bg-[#141310] p-4 text-[12.5px] text-[#F3EDE3]/55 shadow-sm">
+            <div className="font-medium text-[#F3EDE3]/75">Demo credentials</div>
             <div className="mt-1 font-mono">admin@solene.studio</div>
             <div className="font-mono">solene123</div>
             <button

@@ -69,13 +69,13 @@ export default function Dashboard() {
         {kpis.map((k) => (
           <Card key={k.label} className="p-4 md:p-5">
             <div className="flex items-center justify-between">
-              <span className="text-[12.5px] text-black/50">{k.label}</span>
+              <span className="text-[12.5px] text-[#F3EDE3]/50">{k.label}</span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-accent">
                 <k.icon size={15} />
               </span>
             </div>
             <div className="mt-3 text-[26px] font-semibold tracking-[-0.03em] md:text-[30px]">{k.value}</div>
-            <div className="mt-0.5 text-[12px] text-black/40">{k.sub}</div>
+            <div className="mt-0.5 text-[12px] text-[#F3EDE3]/40">{k.sub}</div>
           </Card>
         ))}
       </div>
@@ -85,7 +85,7 @@ export default function Dashboard() {
           className="lg:col-span-2"
           title="Revenue · last 14 days"
           action={
-            <span className="flex items-center gap-1 text-[12px] text-emerald-600">
+            <span className="flex items-center gap-1 text-[12px] text-emerald-400">
               <TrendingUp size={13} /> {formatPrice(data.series.reduce((s, x) => s + x.v, 0), c)}
             </span>
           }
@@ -99,7 +99,7 @@ export default function Dashboard() {
                 </linearGradient>
               </defs>
               {[25, 50, 75].map((y) => (
-                <line key={y} x1="0" x2="100" y1={y} y2={y} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" vectorEffect="non-scaling-stroke" />
+                <line key={y} x1="0" x2="100" y1={y} y2={y} stroke="rgba(255,255,255,0.07)" strokeWidth="0.3" vectorEffect="non-scaling-stroke" />
               ))}
               <path d={area} fill="url(#g)" />
               <path d={line} fill="none" stroke="var(--c-accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
@@ -107,14 +107,14 @@ export default function Dashboard() {
             <div className="absolute inset-0 flex">
               {data.series.map((p) => (
                 <div key={p.d} className="group relative flex-1">
-                  <div className="pointer-events-none absolute -top-2 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[#1d1d1f] px-2 py-1 text-[11px] text-white opacity-0 group-hover:opacity-100">
+                  <div className="pointer-events-none absolute -top-2 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-accent px-2 py-1 text-[11px] text-[#0E0E0E] opacity-0 group-hover:opacity-100">
                     {formatDate(p.d)} · {formatPrice(p.v, c)}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="mt-2 flex justify-between text-[11px] text-black/40">
+          <div className="mt-2 flex justify-between text-[11px] text-[#F3EDE3]/40">
             <span>{formatDate(data.series[0].d)}</span>
             <span>Today</span>
           </div>
@@ -126,21 +126,21 @@ export default function Dashboard() {
               <div key={s.name}>
                 <div className="flex justify-between text-[13px]">
                   <span className="truncate pr-2">{s.name}</span>
-                  <span className="text-black/45">{s.count}</span>
+                  <span className="text-[#F3EDE3]/45">{s.count}</span>
                 </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/5">
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/5">
                   <div className="h-full rounded-full bg-accent" style={{ width: `${(s.count / data.byService[0].count) * 100}%` }} />
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-5 grid grid-cols-2 gap-2 border-t border-black/5 pt-4 text-[12px]">
+          <div className="mt-5 grid grid-cols-2 gap-2 border-t border-white/5 pt-4 text-[12px]">
             <div>
-              <div className="text-black/45">Cancel / no-show</div>
+              <div className="text-[#F3EDE3]/45">Cancel / no-show</div>
               <div className="text-lg font-semibold">{data.cancelRate}%</div>
             </div>
             <div>
-              <div className="text-black/45">Online share</div>
+              <div className="text-[#F3EDE3]/45">Online share</div>
               <div className="text-lg font-semibold">{Math.round(((data.sources[0].n || 0) / (appointments.length || 1)) * 100)}%</div>
             </div>
           </div>
@@ -153,19 +153,19 @@ export default function Dashboard() {
             {data.upcoming.map((a) => (
               <div key={a.id} className="flex items-center gap-3 py-3">
                 <div className="w-14 shrink-0 text-center">
-                  <div className="text-[11px] uppercase text-black/40">{formatDate(a.date, { weekday: "short" })}</div>
+                  <div className="text-[11px] uppercase text-[#F3EDE3]/40">{formatDate(a.date, { weekday: "short" })}</div>
                   <div className="text-[13px] font-semibold">{formatTime(a.time)}</div>
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[14px] font-medium">{a.clientName}</div>
-                  <div className="truncate text-[12.5px] text-black/45">
+                  <div className="truncate text-[12.5px] text-[#F3EDE3]/45">
                     {a.serviceName} · {a.staffName}
                   </div>
                 </div>
                 <Badge status={a.status} />
               </div>
             ))}
-            {!data.upcoming.length && <p className="py-6 text-center text-sm text-black/40">No upcoming appointments.</p>}
+            {!data.upcoming.length && <p className="py-6 text-center text-sm text-[#F3EDE3]/40">No upcoming appointments.</p>}
           </div>
         </Card>
         <Card title="Latest leads" action={<Link href="/admin/leads" className="text-[13px] text-accent">Inbox</Link>}>
@@ -175,7 +175,7 @@ export default function Dashboard() {
                 <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: l.status === "new" ? "var(--c-accent)" : "rgba(0,0,0,0.15)" }} />
                 <div className="min-w-0">
                   <div className="truncate text-[13.5px] font-medium">{l.name || l.email || l.phone}</div>
-                  <div className="truncate text-[12px] text-black/45">
+                  <div className="truncate text-[12px] text-[#F3EDE3]/45">
                     <span className="capitalize">{l.type}</span> · {l.message || "Newsletter signup"}
                   </div>
                 </div>

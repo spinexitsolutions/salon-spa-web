@@ -41,7 +41,7 @@ export default function SettingsPage() {
                 <span className="text-[13.5px]">{h.day}</span>
                 <input type="time" className="admin-input py-2" disabled={h.closed} value={h.open} onChange={(e) => patch("settings", { hours: settings.hours.map((x, j) => (j === i ? { ...x, open: e.target.value } : x)) })} />
                 <input type="time" className="admin-input py-2" disabled={h.closed} value={h.close} onChange={(e) => patch("settings", { hours: settings.hours.map((x, j) => (j === i ? { ...x, close: e.target.value } : x)) })} />
-                <label className="flex items-center gap-1.5 text-[12px] text-black/55">
+                <label className="flex items-center gap-1.5 text-[12px] text-[#F3EDE3]/55">
                   <input type="checkbox" checked={h.closed} onChange={(e) => patch("settings", { hours: settings.hours.map((x, j) => (j === i ? { ...x, closed: e.target.checked } : x)) })} /> Closed
                 </label>
               </div>
@@ -72,11 +72,11 @@ export default function SettingsPage() {
             <Input label="Admin email" value={settings.adminEmail} onChange={set("adminEmail")} />
             <Input label="Admin password" type="text" value={settings.adminPassword} onChange={set("adminPassword")} />
           </div>
-          <p className="mt-2 text-[12px] text-black/45">Demo-grade auth stored in the browser. Connect a real auth provider before going live.</p>
+          <p className="mt-2 text-[12px] text-[#F3EDE3]/45">Demo-grade auth stored in the browser. Connect a real auth provider before going live.</p>
         </Card>
 
         <Card title="Data & backup">
-          <p className="text-[13px] text-black/55">Export the entire website, CRM and content as JSON — or restore from a backup.</p>
+          <p className="text-[13px] text-[#F3EDE3]/55">Export the entire website, CRM and content as JSON — or restore from a backup.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Btn
               variant="dark"
@@ -123,7 +123,7 @@ export default function SettingsPage() {
         </Card>
       </div>
       <Toast show={!!toast}>{toast}</Toast>
-      <p className="mt-6 text-center text-[12px] text-black/35">All changes save automatically.</p>
+      <p className="mt-6 text-center text-[12px] text-[#F3EDE3]/35">All changes save automatically.</p>
     </>
   );
 }

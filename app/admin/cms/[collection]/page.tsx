@@ -64,10 +64,10 @@ export default function CollectionPage() {
       />
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="relative w-full md:w-80">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/35" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#F3EDE3]/35" />
           <input className="admin-input pl-9" placeholder={`Search ${schema.title.toLowerCase()}…`} value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
-        <span className="hidden shrink-0 text-[12.5px] text-black/40 md:block">Drag to reorder · changes go live instantly</span>
+        <span className="hidden shrink-0 text-[12.5px] text-[#F3EDE3]/40 md:block">Drag to reorder · changes go live instantly</span>
       </div>
 
       {!list.length ? (
@@ -81,15 +81,15 @@ export default function CollectionPage() {
         >
           {list.map((r, i) => (
             <Reorder.Item key={r.id} value={r} className="list-none">
-              <div className={cn("flex items-center gap-3 rounded-[18px] bg-white p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.04)]", r.published === false && "opacity-55")}>
-                <GripVertical size={16} className="hidden shrink-0 cursor-grab text-black/25 active:cursor-grabbing md:block" />
+              <div className={cn("flex items-center gap-3 rounded-[18px] bg-[#141310] p-3 shadow-[0_0_0_1px_rgba(201,169,110,0.14)]", r.published === false && "opacity-55")}>
+                <GripVertical size={16} className="hidden shrink-0 cursor-grab text-[#F3EDE3]/25 active:cursor-grabbing md:block" />
                 {schema.imageKey && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={String(r[schema.imageKey] || "")} alt="" className="h-12 w-12 shrink-0 rounded-xl bg-black/5 object-cover" />
+                  <img src={String(r[schema.imageKey] || "")} alt="" className="h-12 w-12 shrink-0 rounded-xl bg-white/5 object-cover" />
                 )}
                 <button onClick={() => { setIsNew(false); setEdit({ ...r }); }} className="min-w-0 flex-1 text-left">
                   <div className="truncate text-[14.5px] font-medium">{String(r[schema.titleKey] || "Untitled")}</div>
-                  <div className="truncate text-[12.5px] capitalize text-black/45">{subtitle(r)}</div>
+                  <div className="truncate text-[12.5px] capitalize text-[#F3EDE3]/45">{subtitle(r)}</div>
                 </button>
                 <div className="flex shrink-0 items-center gap-0.5">
                   <IconBtn title="Move up" onClick={() => store.move(key, r.id, -1)} disabled={i === 0 || !!q}>
@@ -133,7 +133,7 @@ export default function CollectionPage() {
               {schema.fields.map((f) => (
                 <div key={f.key} className={f.half ? "" : "sm:col-span-2"}>
                   <FieldInput field={f} value={edit[f.key]} onChange={(v) => setEdit({ ...edit, [f.key]: v })} disabled={key === "categories" && f.key === "id" && !isNew} />
-                  {f.hint && <p className="mt-1 text-[11px] text-black/40">{f.hint}</p>}
+                  {f.hint && <p className="mt-1 text-[11px] text-[#F3EDE3]/40">{f.hint}</p>}
                 </div>
               ))}
             </div>
@@ -146,7 +146,7 @@ export default function CollectionPage() {
 
 function IconBtn({ children, danger, className, ...rest }: React.ButtonHTMLAttributes<HTMLButtonElement> & { danger?: boolean }) {
   return (
-    <button {...rest} className={cn("flex h-8 w-8 items-center justify-center rounded-full text-black/45 transition-colors disabled:opacity-25", danger ? "hover:bg-rose-50 hover:text-rose-600" : "hover:bg-black/5 hover:text-black", className)}>
+    <button {...rest} className={cn("flex h-8 w-8 items-center justify-center rounded-full text-[#F3EDE3]/45 transition-colors disabled:opacity-25", danger ? "hover:bg-rose-500/10 hover:text-rose-300" : "hover:bg-white/5 hover:text-[#F3EDE3]", className)}>
       {children}
     </button>
   );
@@ -167,7 +167,7 @@ function FieldInput({ field, value, onChange, disabled }: { field: FieldDef; val
       return <ImageInput label={field.label} value={String(value ?? "")} onChange={onChange} />;
     case "toggle":
       return (
-        <div className="rounded-xl bg-black/[0.03] px-3 py-2">
+        <div className="rounded-xl bg-white/[0.03] px-3 py-2">
           <Toggle label={field.label} checked={!!value} onChange={onChange} />
         </div>
       );

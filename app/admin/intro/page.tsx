@@ -35,25 +35,25 @@ export default function IntroAdmin() {
         <div className="space-y-4">
           <Card>
             <Toggle label="Enable intro animation" hint="Shown when visitors first open the website" checked={intro.enabled} onChange={(v) => patch("intro", { enabled: v })} />
-            <div className="my-3 h-px bg-black/5" />
+            <div className="my-3 h-px bg-white/5" />
             <Toggle label="Show once per session" hint="Skip the intro on reloads within the same visit" checked={intro.oncePerSession} onChange={(v) => patch("intro", { oncePerSession: v })} />
           </Card>
 
           <Card title="Style">
             <div className="grid gap-3 sm:grid-cols-3">
               {STYLES.map((s) => (
-                <button key={s.id} onClick={() => { patch("intro", { style: s.id }); setK(k + 1); }} className={cn("relative overflow-hidden rounded-2xl border p-0 text-left transition-all", intro.style === s.id ? "border-accent ring-4 ring-accent/15" : "border-black/10 hover:border-black/25")}>
+                <button key={s.id} onClick={() => { patch("intro", { style: s.id }); setK(k + 1); }} className={cn("relative overflow-hidden rounded-2xl border p-0 text-left transition-all", intro.style === s.id ? "border-accent ring-4 ring-accent/15" : "border-white/10 hover:border-white/25")}>
                   <MiniPreview style={s.id} word={intro.word} />
                   <div className="p-3">
                     <div className="flex items-center justify-between text-[14px] font-medium">
                       {s.name}
                       {intro.style === s.id && (
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-white">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[#0E0E0E]">
                           <Check size={12} />
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 text-[12px] text-black/50">{s.desc}</p>
+                    <p className="mt-0.5 text-[12px] text-[#F3EDE3]/50">{s.desc}</p>
                   </div>
                 </button>
               ))}
@@ -66,7 +66,7 @@ export default function IntroAdmin() {
               <Input label="Caption" value={intro.caption} onChange={(e) => patch("intro", { caption: e.target.value })} />
               <div className="sm:col-span-2">
                 <label className="block">
-                  <span className="mb-1.5 flex justify-between text-[12px] font-medium text-black/55">
+                  <span className="mb-1.5 flex justify-between text-[12px] font-medium text-[#F3EDE3]/55">
                     Duration <span>{intro.duration.toFixed(1)}s</span>
                   </span>
                   <input type="range" min={1.2} max={6} step={0.1} value={intro.duration} onChange={(e) => patch("intro", { duration: Number(e.target.value) })} className="w-full accent-[var(--c-accent)]" />

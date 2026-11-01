@@ -18,10 +18,10 @@ export default function SiteBuilder() {
             <Reorder.Group axis="y" values={sections} onReorder={setSections} className="space-y-1.5">
               {sections.map((s, i) => (
                 <Reorder.Item key={s.id} value={s} className="list-none">
-                  <div className="flex cursor-grab items-center gap-3 rounded-xl bg-black/[0.03] px-3 py-1.5 active:cursor-grabbing">
-                    <GripVertical size={15} className="text-black/30" />
-                    <span className="w-5 text-[12px] text-black/35">{String(i + 1).padStart(2, "0")}</span>
-                    <span className={`flex-1 text-[14px] ${s.visible ? "" : "text-black/35 line-through"}`}>{s.label}</span>
+                  <div className="flex cursor-grab items-center gap-3 rounded-xl bg-white/[0.03] px-3 py-1.5 active:cursor-grabbing">
+                    <GripVertical size={15} className="text-[#F3EDE3]/30" />
+                    <span className="w-5 text-[12px] text-[#F3EDE3]/35">{String(i + 1).padStart(2, "0")}</span>
+                    <span className={`flex-1 text-[14px] ${s.visible ? "" : "text-[#F3EDE3]/35 line-through"}`}>{s.label}</span>
                     <Toggle checked={s.visible} onChange={(v) => setSections(sections.map((x) => (x.id === s.id ? { ...x, visible: v } : x)))} />
                   </div>
                 </Reorder.Item>

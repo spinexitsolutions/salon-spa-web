@@ -181,13 +181,23 @@ body {
 @layer components {
 .admin-input {
   width: 100%;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
+  border-radius: 10px;
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  background: #0e0e0e;
+  color: #f3ede3;
   padding: 10px 12px;
   font-size: 14px;
+  font-weight: 400;
   outline: none;
+  color-scheme: dark;
   transition: box-shadow 0.2s, border-color 0.2s;
+}
+.admin-input::placeholder {
+  color: rgba(243, 237, 227, 0.35);
+}
+.admin-input option {
+  background: #141310;
+  color: #f3ede3;
 }
 .admin-input:focus {
   border-color: var(--c-accent);

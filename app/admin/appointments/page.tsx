@@ -109,7 +109,7 @@ function Appointments() {
             />
             <div className="flex gap-2">
               <div className="relative flex-1 md:w-64">
-                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/35" />
+                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#F3EDE3]/35" />
                 <input className="admin-input pl-9" placeholder="Search name, phone, ref…" value={q} onChange={(e) => setQ(e.target.value)} />
               </div>
               <select className="admin-input w-auto" value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -127,7 +127,7 @@ function Appointments() {
             <Empty>No appointments match.</Empty>
           ) : (
             <Card className="p-0 md:p-0">
-              <div className="hidden grid-cols-[110px_1.3fr_1.3fr_1fr_100px_130px_40px] gap-3 border-b border-black/5 px-5 py-3 text-[11.5px] font-medium uppercase tracking-wider text-black/40 md:grid">
+              <div className="hidden grid-cols-[110px_1.3fr_1.3fr_1fr_100px_130px_40px] gap-3 border-b border-white/5 px-5 py-3 text-[11.5px] font-medium uppercase tracking-wider text-[#F3EDE3]/40 md:grid">
                 <span>When</span>
                 <span>Client</span>
                 <span>Service</span>
@@ -138,14 +138,14 @@ function Appointments() {
               </div>
               <div className="divide-y divide-black/5">
                 {list.map((a) => (
-                  <div key={a.id} className="grid cursor-pointer grid-cols-[1fr_auto] gap-2 px-4 py-3.5 transition-colors hover:bg-black/[0.02] md:grid-cols-[110px_1.3fr_1.3fr_1fr_100px_130px_40px] md:items-center md:gap-3 md:px-5" onClick={() => setEdit(a)}>
+                  <div key={a.id} className="grid cursor-pointer grid-cols-[1fr_auto] gap-2 px-4 py-3.5 transition-colors hover:bg-white/[0.02] md:grid-cols-[110px_1.3fr_1.3fr_1fr_100px_130px_40px] md:items-center md:gap-3 md:px-5" onClick={() => setEdit(a)}>
                     <div className="hidden md:block">
                       <div className="text-[13px] font-medium">{formatDate(a.date, { weekday: "short", day: "numeric", month: "short" })}</div>
-                      <div className="text-[12px] text-black/45">{formatTime(a.time)}</div>
+                      <div className="text-[12px] text-[#F3EDE3]/45">{formatTime(a.time)}</div>
                     </div>
                     <div className="min-w-0">
                       <div className="truncate text-[14px] font-medium">{a.clientName}</div>
-                      <div className="truncate text-[12px] text-black/45">
+                      <div className="truncate text-[12px] text-[#F3EDE3]/45">
                         <span className="md:hidden">
                           {formatDate(a.date)} · {formatTime(a.time)} · {a.serviceName}
                         </span>
@@ -154,11 +154,11 @@ function Appointments() {
                     </div>
                     <div className="hidden min-w-0 md:block">
                       <div className="truncate text-[13.5px]">{a.serviceName}</div>
-                      <div className="text-[12px] text-black/45">
+                      <div className="text-[12px] text-[#F3EDE3]/45">
                         {a.duration} min · <span className="font-mono">{a.ref}</span>
                       </div>
                     </div>
-                    <div className="hidden truncate text-[13px] text-black/70 md:block">{a.staffName || "—"}</div>
+                    <div className="hidden truncate text-[13px] text-[#F3EDE3]/70 md:block">{a.staffName || "—"}</div>
                     <div className="hidden text-[13.5px] md:block">{formatPrice(a.price, settings.currency)}</div>
                     <div onClick={(e) => e.stopPropagation()} className="justify-self-end md:justify-self-start">
 <label className="relative cursor-pointer">
@@ -214,17 +214,17 @@ function Appointments() {
               {weekDays.map((d) => {
                 const items = appointments.filter((a) => a.date === d && a.status !== "cancelled").sort((a, b) => a.time.localeCompare(b.time));
                 return (
-                  <div key={d} className={cn("min-h-[360px] rounded-2xl p-2", d === today ? "bg-accent/[0.07]" : "bg-black/[0.025]")}>
+                  <div key={d} className={cn("min-h-[360px] rounded-2xl p-2", d === today ? "bg-accent/[0.07]" : "bg-white/[0.025]")}>
                     <div className="mb-2 flex items-baseline justify-between px-1">
-                      <span className="text-[11.5px] uppercase text-black/45">{formatDate(d, { weekday: "short" })}</span>
+                      <span className="text-[11.5px] uppercase text-[#F3EDE3]/45">{formatDate(d, { weekday: "short" })}</span>
                       <span className={cn("text-[15px] font-semibold", d === today && "text-accent")}>{new Date(d + "T00:00:00").getDate()}</span>
                     </div>
                     <div className="space-y-1.5">
                       {items.map((a) => (
-                        <button key={a.id} onClick={() => setEdit(a)} className="block w-full rounded-xl bg-white p-2 text-left shadow-sm transition-transform hover:-translate-y-0.5">
-                          <div className="text-[11px] text-black/45">{formatTime(a.time)}</div>
+                        <button key={a.id} onClick={() => setEdit(a)} className="block w-full rounded-xl bg-[#141310] p-2 text-left shadow-sm transition-transform hover:-translate-y-0.5">
+                          <div className="text-[11px] text-[#F3EDE3]/45">{formatTime(a.time)}</div>
                           <div className="truncate text-[12.5px] font-medium">{a.clientName}</div>
-                          <div className="truncate text-[11px] text-black/50">{a.serviceName}</div>
+                          <div className="truncate text-[11px] text-[#F3EDE3]/50">{a.serviceName}</div>
                           <div className="mt-1">
                             <span className={cn("block h-1 rounded-full", a.status === "pending" ? "bg-amber-400" : a.status === "completed" ? "bg-emerald-400" : a.status === "no-show" ? "bg-zinc-300" : "bg-sky-400")} />
                           </div>
