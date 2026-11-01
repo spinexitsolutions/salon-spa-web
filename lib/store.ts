@@ -22,7 +22,7 @@ type Actions = {
 
 export type Store = SiteData & Actions;
 
-export const STORE_KEY = "solene-site-v1";
+export const STORE_KEY = "solene-site-v2";
 
 export const useStore = create<Store>()(
   persist(

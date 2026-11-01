@@ -113,7 +113,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-3 px-3 pb-5 pt-1">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1d1d1f] font-serif text-lg italic text-white">{brand.charAt(0)}</span>
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1d1d1f] font-serif text-lg text-white">{brand.charAt(0)}</span>
         <div className="leading-tight">
           <div className="text-[15px] font-semibold">{brand}</div>
           <div className="text-[11.5px] text-black/45">Studio OS</div>

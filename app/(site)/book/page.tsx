@@ -30,6 +30,8 @@ function BookingFlow() {
 
   useEffect(() => {
     const s = params.get("service");
+    const d = params.get("date");
+    if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) setDate(d);
     if (s && services.some((x) => x.id === s)) {
       setServiceId(s);
       setStep(1);

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type MotionValue,
   motion,
   useAnimationFrame,
   useMotionValue,
@@ -15,7 +16,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Clock } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn, formatPrice } from "@/lib/utils";
-import { Counter, EASE, Parallax, Reveal, SafeImg, ScrollWords, SectionLabel, SplitText } from "@/components/motion";
+import { Counter, EASE, Reveal, SafeImg, SectionLabel, SplitText } from "@/components/motion";
 
 /* ───────────── Marquee (velocity-reactive) ───────────── */
 export function Marquee() {
@@ -48,7 +49,7 @@ export function Marquee() {
     <div className="flex shrink-0 items-center">
       {words.map((w, i) => (
         <span key={i} className="flex items-center">
-          <span className={cn("display px-6 text-[13vw] md:px-10 md:text-[7.5vw]", i % 2 && "italic text-accent")}>{w}</span>
+          <span className={cn("display px-6 text-[13vw] md:px-10 md:text-[7.5vw]", i % 2 && "text-accent")}>{w}</span>
           <svg width="34" height="34" viewBox="0 0 24 24" className="shrink-0 text-ink/30">
             <path fill="currentColor" d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" />
           </svg>
@@ -66,33 +67,66 @@ export function Marquee() {
   );
 }
 
-/* ───────────── Philosophy ───────────── */
+/* ───────────── Philosophy — text with inline image pills ───────────── */
+function LitWord({ children, progress, range }: { children: React.ReactNode; progress: MotionValue<number>; range: [number, number] }) {
+  const opacity = useTransform(progress, range, [0.12, 1]);
+  return (
+    <motion.span style={{ opacity }} className="mr-[0.22em] inline-block">
+      {children}
+    </motion.span>
+  );
+}
+
+function InlineImg({ src, progress, range }: { src?: string; progress: MotionValue<number>; range: [number, number] }) {
+  const w = useTransform(progress, range, ["0em", "1.9em"]);
+  const r = useTransform(progress, range, [-12, 0]);
+  return (
+    <motion.span style={{ width: w, rotate: r }} className="mr-[0.22em] inline-block h-[0.82em] overflow-hidden rounded-full align-[-0.06em]">
+      <SafeImg src={src} alt="" className="h-full w-[1.9em] max-w-none object-cover" />
+    </motion.span>
+  );
+}
+
 export function Philosophy() {
   const gallery = useStore((s) => s.gallery);
   const settings = useStore((s) => s.settings);
-  const a = gallery[3]?.image;
-  const b = gallery[7]?.image;
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.5"] });
+  const imgs = [gallery[1]?.image, gallery[3]?.image, gallery[7]?.image, gallery[10]?.image];
+  const tokens = `${settings.brandName} is where beauty {0} slows down. Hair, skin {1} and body rituals by artists who listen first {2} and rush never. You leave lighter {3} — every single time.`.split(" ");
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-40">
-      <SectionLabel index="01">Philosophy</SectionLabel>
-      <div className="mt-10 grid gap-12 md:grid-cols-12">
-        <div className="md:col-span-8">
-          <ScrollWords
-            className="display text-[9vw] leading-[1.02] md:text-[4.6vw]"
-            text={`At ${settings.brandName}, we believe beauty is not a transformation — it's a return. To softness, to stillness, to the version of you that already glows. Every ritual begins with listening.`}
-          />
-          <Reveal delay={0.1} className="mt-10 flex flex-wrap gap-3">
-            {["Clean formulas", "Unhurried appointments", "Artists, not assembly lines", "Sterile, single-use tools"].map((t) => (
-              <span key={t} className="rounded-full border hairline px-4 py-2 text-[13px]">
-                {t}
-              </span>
-            ))}
+    <section className="mx-auto max-w-[1440px] px-4 py-24 md:px-8 md:py-40">
+      <div className="flex items-center justify-between">
+        <SectionLabel index="01">Our philosophy</SectionLabel>
+        <span className="hidden text-[13px] text-soft md:block">Since 2014 · Bandra, Mumbai</span>
+      </div>
+      <div ref={ref} className="display mt-10 text-[10.5vw] leading-[1] md:text-[6.2vw] md:leading-[0.98]">
+        {tokens.map((t, i) => {
+          const range: [number, number] = [i / tokens.length, (i + 1) / tokens.length];
+          const m = t.match(/^\{(\d)\}$/);
+          if (m) return <InlineImg key={i} src={imgs[Number(m[1])]} progress={scrollYProgress} range={range} />;
+          return (
+            <LitWord key={i} progress={scrollYProgress} range={range}>
+              {t}
+            </LitWord>
+          );
+        })}
+      </div>
+      <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ["Clean formulas", "Olaplex, Kérastase & Dermalogica only."],
+          ["Unhurried time", "We never double-book an artist."],
+          ["Single-use tools", "Hospital-grade hygiene, always."],
+          ["Free consults", "Every visit starts with a chat."],
+        ].map(([t, d], i) => (
+          <Reveal key={t} delay={i * 0.06}>
+            <div className="group h-full rounded-[calc(var(--radius)*0.8)] border border-ink/10 p-5 transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white">
+              <div className="text-[26px] font-semibold tracking-tight">0{i + 1}</div>
+              <div className="mt-8 text-[17px] font-semibold">{t}</div>
+              <div className="mt-1 text-[14px] opacity-60">{d}</div>
+            </div>
           </Reveal>
-        </div>
-        <div className="relative md:col-span-4">
-          <Parallax src={a} className="aspect-[3/4] w-[78%] rounded-[var(--radius)]" />
-          <Parallax src={b} speed={20} className="absolute -bottom-10 right-0 aspect-square w-[52%] rounded-[var(--radius)] border-[6px] border-bg" />
-        </div>
+        ))}
       </div>
     </section>
   );
@@ -162,7 +196,7 @@ export function ServicesMenu() {
                   <SafeImg src={s.image} alt="" className="h-16 w-16 rounded-2xl object-cover md:hidden" />
                   <span className="eyebrow hidden text-soft md:block">{String(i + 1).padStart(2, "0")}</span>
                   <span className="min-w-0">
-                    <span className="display block text-[26px] transition-all duration-500 group-hover:translate-x-2 group-hover:italic md:text-[44px]">{s.name}</span>
+                    <span className="display block text-[26px] transition-all duration-500 group-hover:translate-x-2 md:text-[44px]">{s.name}</span>
                     <span className="mt-1 line-clamp-1 block text-[13px] text-soft md:hidden">
                       {s.duration} min · {formatPrice(s.price, currency)}
                     </span>
@@ -283,19 +317,20 @@ export function Rituals() {
   );
 }
 
-/* ───────────── Stats ───────────── */
+/* ───────────── Stats — bento ───────────── */
 export function Stats() {
   const stats = useStore((s) => s.stats).filter((s) => s.published);
+  const styles = ["bg-accent text-white md:row-span-2", "bg-ink text-bg", "bg-white text-ink border border-ink/10", "bg-[color-mix(in_oklab,var(--c-accent)_14%,var(--c-bg))] text-ink"];
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
-      <div className="grid grid-cols-2 gap-y-12 md:grid-cols-4">
+    <section className="mx-auto max-w-[1440px] px-4 py-20 md:px-8 md:py-28">
+      <div className="grid auto-rows-[minmax(170px,auto)] grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {stats.map((s, i) => (
-          <Reveal key={s.id} delay={i * 0.08} className="border-l hairline pl-5 md:pl-8">
-            <div className="display text-[18vw] leading-none md:text-[7vw]">
+          <Reveal key={s.id} delay={i * 0.08} className={cn("flex flex-col justify-between rounded-[var(--radius)] p-5 md:p-7", styles[i % styles.length], i === 0 && "col-span-2 md:col-span-2")}>
+            <div className="text-[13px] font-medium opacity-70">{s.label}</div>
+            <div className={cn("display leading-none", i === 0 ? "text-[30vw] md:text-[13vw]" : "text-[15vw] md:text-[6vw]")}>
               <Counter value={s.value} decimals={s.decimals} />
-              <span className="text-accent">{s.suffix}</span>
+              <span className={i === 0 ? "" : "text-accent"}>{s.suffix}</span>
             </div>
-            <div className="eyebrow mt-3 text-soft">{s.label}</div>
           </Reveal>
         ))}
       </div>

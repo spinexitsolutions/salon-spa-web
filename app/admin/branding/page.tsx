@@ -7,17 +7,17 @@ import { Card, Input, PageTitle, Toggle } from "@/components/admin/ui";
 import Preview from "@/components/admin/Preview";
 
 const PRESETS: { name: string; t: Partial<Theme> }[] = [
-  { name: "Copper Ivory", t: { bg: "#F4EFE8", ink: "#151210", accent: "#B0694C", night: "#0F0E0D", cream: "#ECE3D7" } },
-  { name: "Sage Spa", t: { bg: "#F1F2EC", ink: "#18201A", accent: "#6F8466", night: "#121712", cream: "#E3E7DA" } },
-  { name: "Rose Noir", t: { bg: "#F7F0EF", ink: "#1A1214", accent: "#B4566A", night: "#140D0F", cream: "#F0DFE0" } },
-  { name: "Ocean Pearl", t: { bg: "#EFF2F3", ink: "#0F1A1F", accent: "#3D7A8C", night: "#0B1316", cream: "#DCE6E8" } },
-  { name: "Champagne", t: { bg: "#F6F1E7", ink: "#1C170F", accent: "#A88A4E", night: "#14110B", cream: "#EDE3CC" } },
+  { name: "Vermilion", t: { bg: "#F3F1EC", ink: "#111111", accent: "#FF4F2B", night: "#111111", cream: "#F3F1EC" } },
+  { name: "Electric Lilac", t: { bg: "#F4F2F8", ink: "#14121A", accent: "#7C5CFF", night: "#14121A", cream: "#F4F2F8" } },
+  { name: "Cherry", t: { bg: "#F6F1EF", ink: "#160F10", accent: "#D7263D", night: "#160F10", cream: "#F6F1EF" } },
+  { name: "Cobalt", t: { bg: "#F1F3F5", ink: "#0D1117", accent: "#1F5CFF", night: "#0D1117", cream: "#F1F3F5" } },
+  { name: "Hot Pink", t: { bg: "#F7F3F2", ink: "#141012", accent: "#FF3D8B", night: "#141012", cream: "#F7F3F2" } },
 ];
 
 const FONTS: { id: Theme["displayFont"]; name: string; v: string }[] = [
-  { id: "instrument", name: "Instrument Serif", v: "var(--font-instrument)" },
-  { id: "playfair", name: "Playfair Display", v: "var(--font-playfair)" },
-  { id: "cormorant", name: "Cormorant", v: "var(--font-cormorant)" },
+  { id: "bricolage", name: "Bricolage Grotesque", v: "var(--font-bricolage)" },
+  { id: "syne", name: "Syne", v: "var(--font-syne)" },
+  { id: "unbounded", name: "Unbounded", v: "var(--font-unbounded)" },
 ];
 
 export default function Branding() {
@@ -75,7 +75,7 @@ export default function Branding() {
               {FONTS.map((f) => (
                 <button key={f.id} onClick={() => patch("theme", { displayFont: f.id })} className={cn("rounded-2xl border p-4 text-left transition-all", theme.displayFont === f.id ? "border-accent ring-4 ring-accent/15" : "border-black/10")}>
                   <div className="text-[40px] leading-none tracking-tight" style={{ fontFamily: f.v }}>
-                    Aa <em>Glow</em>
+                    Aa Glow
                   </div>
                   <div className="mt-2 text-[12.5px] text-black/55">{f.name}</div>
                 </button>

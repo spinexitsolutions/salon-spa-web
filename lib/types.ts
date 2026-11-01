@@ -29,7 +29,7 @@ export type Theme = {
   accent: string;
   night: string;
   cream: string;
-  displayFont: "instrument" | "playfair" | "cormorant";
+  displayFont: "bricolage" | "syne" | "unbounded";
   radius: number;
   cursor: boolean;
   grain: boolean;
@@ -51,13 +51,12 @@ export type Intro = {
 export type Hero = {
   eyebrow: string;
   line1: string;
-  italic: string;
+  words: string;
   line2: string;
   subtitle: string;
   ctaPrimary: string;
   ctaSecondary: string;
   image: string;
-  revealTitle: string;
 };
 
 export type Announcement = { enabled: boolean; text: string; link: string; linkLabel: string };

@@ -98,9 +98,16 @@ export function WhatsAppFab() {
   const introDone = useUI((s) => s.introDone);
   const [tip, setTip] = useState(false);
   const path = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const f = () => setScrolled(window.scrollY > 700);
+    f();
+    window.addEventListener("scroll", f, { passive: true });
+    return () => window.removeEventListener("scroll", f);
+  }, []);
   useEffect(() => {
     if (!introDone) return;
-    const a = setTimeout(() => setTip(true), 4000);
+    const a = setTimeout(() => setTip(false), 4000);
     const b = setTimeout(() => setTip(false), 11000);
     return () => {
       clearTimeout(a);
@@ -108,6 +115,7 @@ export function WhatsAppFab() {
     };
   }, [introDone]);
   if (!wa || path === "/book") return null;
+  const visible = introDone && (path !== "/" || scrolled);
   return (
     <div className="fixed bottom-[max(16px,env(safe-area-inset-bottom))] right-4 z-[95] flex items-center gap-2 md:bottom-6 md:right-6">
       <AnimatePresence>
@@ -128,8 +136,8 @@ export function WhatsAppFab() {
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
         initial={{ scale: 0 }}
-        animate={introDone ? { scale: 1 } : { scale: 0 }}
-        transition={{ delay: 1, type: "spring", stiffness: 260, damping: 18 }}
+        animate={visible ? { scale: 1 } : { scale: 0 }}
+        transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 18 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_12px_30px_-8px_rgba(37,211,102,0.6)]"

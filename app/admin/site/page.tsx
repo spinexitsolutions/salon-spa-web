@@ -35,16 +35,15 @@ export default function SiteBuilder() {
                 <Input label="Eyebrow" value={hero.eyebrow} onChange={(e) => patch("hero", { eyebrow: e.target.value })} />
               </div>
               <Input label="Headline — first" value={hero.line1} onChange={(e) => patch("hero", { line1: e.target.value })} />
-              <Input label="Italic accent word" value={hero.italic} onChange={(e) => patch("hero", { italic: e.target.value })} />
+              <Input label="Rotating words (comma separated)" value={hero.words} onChange={(e) => patch("hero", { words: e.target.value })} />
               <Input label="Headline — second line" value={hero.line2} onChange={(e) => patch("hero", { line2: e.target.value })} />
               <div className="sm:col-span-3">
                 <Textarea label="Subtitle" rows={2} value={hero.subtitle} onChange={(e) => patch("hero", { subtitle: e.target.value })} />
               </div>
               <Input label="Primary button" value={hero.ctaPrimary} onChange={(e) => patch("hero", { ctaPrimary: e.target.value })} />
               <Input label="Secondary button" value={hero.ctaSecondary} onChange={(e) => patch("hero", { ctaSecondary: e.target.value })} />
-              <Input label="Full-screen reveal title" value={hero.revealTitle} onChange={(e) => patch("hero", { revealTitle: e.target.value })} />
               <div className="sm:col-span-3">
-                <ImageInput label="Hero image (expands on scroll)" value={hero.image} onChange={(v) => patch("hero", { image: v })} />
+                <ImageInput label="Hero background image (quick-book card)" value={hero.image} onChange={(v) => patch("hero", { image: v })} />
               </div>
             </div>
           </Card>

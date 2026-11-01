@@ -1,6 +1,6 @@
 # Solène — Salon & Spa Atelier
 
-A premium, mobile-first salon & spa website with a built-in **Studio OS** admin panel (CRM + CMS). Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, Framer Motion and Lenis.
+A premium, mobile-first salon & spa website (sans-serif type system: Bricolage Grotesque + Instrument Sans, vermilion accent) with a built-in **Studio OS** admin panel (CRM + CMS). Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, Framer Motion and Lenis.
 
 ## Quick start
 
@@ -17,9 +17,9 @@ Admin panel: **`/admin`** (demo login `admin@solene.studio` / `solene123` — th
 | --- | --- |
 | Intro animation | 3 styles (Bloom / Frame / Minimal), wordmark, caption, images and duration all set from admin. `/?intro=1` forces replay. |
 | Dynamic-island navbar | Floating pill with scroll-progress ring, live "Open · till 9 PM" status, compacts on scroll, turns dark over dark sections, morphs into a full menu with hover image previews. Announcements drop out of it like a notification. |
-| Scroll-expand hero | The image grows from an inset card to full screen while the headline lifts away. |
+| Kinetic hero | Rotating word inside an accent pill ("Your best **skin** starts here"), a swipeable deck of service-category cards, a spinning Book badge and a quick-book bar (service + day → booking). |
 | Velocity marquee | Speed and skew react to how fast you scroll. |
-| Scroll-lit philosophy text | Words un-blur and light up as you read. |
+| Philosophy | Words light up as you scroll, and image pills open up inside the sentence. |
 | Service menu | Category pills with a sliding indicator; a cursor-following image preview on desktop; cards on mobile. |
 | Signature rituals | Pinned horizontal-scroll gallery of featured services. |
 | Team, gallery (filter + shared-element lightbox), memberships, testimonials carousel, offers with copyable codes, journal, FAQ, CTA with callback request | |
@@ -39,7 +39,7 @@ Admin panel: **`/admin`** (demo login `admin@solene.studio` / `solene123` — th
 - **CMS** — services, categories, team, gallery, testimonials, memberships, offers, journal, FAQs, numbers. Drag to reorder, publish/hide, duplicate, upload images or paste URLs.
 - **Homepage builder** — drag to reorder sections, show/hide any section, edit hero text and image, announcement bar. Includes a live mobile/desktop preview.
 - **Intro animation** — style, text, timing, images, once-per-session, live preview.
-- **Brand & theme** — name, 5 palette presets plus custom colours, 3 display typefaces, corner radius, and toggles for smooth scroll, cursor and grain.
+- **Brand & theme** — name, 5 palette presets (Vermilion, Electric Lilac, Cherry, Cobalt, Hot Pink) plus custom colours, 3 sans display typefaces (Bricolage, Syne, Unbounded), corner radius, and toggles for smooth scroll, cursor and grain.
 - **Business settings** — contact, WhatsApp, opening hours (these drive the booking slots and the live open/closed status), socials, SEO, admin credentials, and JSON export/import/reset.
 
 ## Architecture

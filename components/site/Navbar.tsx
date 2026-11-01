@@ -209,8 +209,8 @@ export default function Navbar() {
                           <span
                             className={cn(
                               "display text-[44px] transition-all duration-500 md:text-[58px]",
-                              (pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href))) && "italic text-accent",
-                              "group-hover:translate-x-2 group-hover:italic"
+                              (pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href))) && "text-accent",
+                              "group-hover:translate-x-2"
                             )}
                           >
                             {l.label}
@@ -311,7 +311,7 @@ function Mark({ letter, progress, tone }: { letter: string; progress: ReturnType
           style={{ pathLength: progress }}
         />
       </svg>
-      <span className={cn("flex h-[30px] w-[30px] items-center justify-center rounded-full font-serif text-[19px] italic leading-none", tone === "dark" ? "bg-cream text-night" : "bg-ink text-bg")}>
+      <span className={cn("flex h-[30px] w-[30px] items-center justify-center rounded-full font-serif text-[19px] leading-none", tone === "dark" ? "bg-cream text-night" : "bg-ink text-bg")}>
         {letter}
       </span>
     </span>

@@ -193,10 +193,14 @@ export function Magnetic({ children, strength = 0.35, className }: { children: R
 
 export function SectionLabel({ index, children, light }: { index: string; children: ReactNode; light?: boolean }) {
   return (
-    <div className={cn("eyebrow flex items-center gap-3", light ? "text-cream/60" : "text-soft")}>
-      <span className="text-accent">({index})</span>
-      <span className={cn("h-px w-10", light ? "bg-cream/25" : "bg-ink/20")} />
-      <span>{children}</span>
+    <div
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border py-1 pl-1 pr-3.5 text-[13px] font-medium",
+        light ? "border-white/15 text-cream/80" : "border-ink/10 bg-white/50 text-ink/80"
+      )}
+    >
+      <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-white">{index}</span>
+      {children}
     </div>
   );
 }
